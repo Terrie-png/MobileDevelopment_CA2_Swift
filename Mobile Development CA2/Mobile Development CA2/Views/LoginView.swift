@@ -1,4 +1,5 @@
 import SwiftUI
+import AuthenticationServices
 
 struct LoginView: View {
     @State private var username: String = ""
@@ -55,10 +56,57 @@ struct LoginView: View {
 
                 .padding(.top, 20)
                 
+                VStack {
+                    
+                    Divider()
+                    
+                    Text("OR")
+                        .font(.body)
+                        .foregroundColor(.gray)
+                        .padding(.horizontal)
+                    Divider()
+                }
+                
+                            .padding(.vertical, 30)
+                            
+                            // Apple Login Button
+                            SignInWithAppleButton(.signIn, onRequest: { request in
+                                // Configure the request
+                            }, onCompletion: { result in
+                                switch result {
+                                case .success(let authResults):
+                                    print("Apple login succeeded: \(authResults)")
+                                case .failure(let error):
+                                    print("Apple login failed: \(error)")
+                                }
+                            })
+                            .signInWithAppleButtonStyle(.black) // You can change this to .white or .whiteOutline
+                            .frame(height: 45)
+                            .padding(.horizontal)
+                            .padding(.bottom, 40)
+                
             }
             .padding()
             .navigationTitle("Login")
             .navigationBarBackButtonHidden(true)
+        }
+        
+        
+    }
+    // Function to handle Apple Sign In results
+    func handleAppleSignIn(authResults: ASAuthorization) {
+        // Extract Apple ID credentials from the result
+        if let appleIDCredential = authResults.credential as? ASAuthorizationAppleIDCredential {
+            let userIdentifier = appleIDCredential.user
+            let email = appleIDCredential.email // If the user has chosen to share their email
+            let fullName = appleIDCredential.fullName // Get the full name (optional)
+            
+            // You can use this information to either log the user in or register a new user in your system
+            // Example:
+            print("User ID: \(userIdentifier), Email: \(email ?? "No email")")
+            
+            // Proceed to app's home screen or landing page
+            // (based on your app's flow)
         }
     }
 }
@@ -74,6 +122,7 @@ struct LandingPage: View{
             .navigationBarTitle("Landing Page", displayMode: .inline)
         }
 }
+    
 #Preview {
     LoginView()
 }
