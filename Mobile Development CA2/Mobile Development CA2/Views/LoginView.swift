@@ -7,7 +7,6 @@ struct LoginView: View {
     var body: some View {
         NavigationStack{
             VStack {
-                // Username Input
                 HStack {
                     Text("Enter Username:")
                         .font(.custom("Satoshi-Variable", size: 20))
@@ -44,8 +43,22 @@ struct LoginView: View {
                 .navigationDestination(isPresented: $isLoggedIn){
                     LandingPage()
                 }
+                HStack {
+                    Text("Don't have an account?")
+                        .font(.body)
+                    NavigationLink("Sign Up", destination: RegistrationView())  // Navigate to Sign Up view
+                        .font(.body)
+                        .foregroundColor(.blue)
+                        .underline()
+                }
+
+
+                .padding(.top, 20)
+                
             }
             .padding()
+            .navigationTitle("Login")
+            .navigationBarBackButtonHidden(true)
         }
     }
 }
