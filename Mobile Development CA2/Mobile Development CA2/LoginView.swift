@@ -1,36 +1,47 @@
-//
-//  LoginView.swift
-//  Mobile Development CA2
-//
-//  Created by Student on 13/03/2025.
-//
-
 import SwiftUI
 
 struct LoginView: View {
     @State private var username: String = ""
     @State private var password: String = ""
+    
     var body: some View {
-        VStack{
+        
+        VStack {
+            // Username Input
+            HStack {
+                Text("Enter Username:")
+                    .font(.custom("Satoshi-Variable", size: 20))
+                TextField("Username", text: $username)
+                    .padding()
+                    .background(Color.gray.opacity(0.1))
+                    .cornerRadius(8)
+                    .padding(.horizontal)
+            }
+            .padding(.bottom, 10)
             
             HStack {
-                Text("Enter Username:").font(.headline)
-                TextField("Username", text:$username).padding()
+                Text("Enter Password:")
+                    .font(.custom("Satoshi-Variable", size: 20))
+                SecureField("Password", text: $password) // Use SecureField for password input
+                    .padding()
                     .background(Color.gray.opacity(0.1))
                     .cornerRadius(8)
                     .padding(.horizontal)
             }
-            HStack{
-                Text("Enter Password:").font(.headline)
-                TextField("Password", text:$password).padding()
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(8)
-                    .padding(.horizontal)
+            .padding(.bottom, 20)
+            
+            // Login Button
+            Button("Login") {
+                print("Login button tapped!")
             }
-            Button(/*@START_MENU_TOKEN@*/"Button"/*@END_MENU_TOKEN@*/) {
-                /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/ /*@END_MENU_TOKEN@*/
-            }
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(Color.blue)
+            .foregroundColor(.white)
+            .cornerRadius(10)
+            .padding(.horizontal)
         }
+        .padding()
     }
 }
 
