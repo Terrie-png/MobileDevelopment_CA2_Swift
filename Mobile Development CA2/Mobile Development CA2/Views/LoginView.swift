@@ -34,6 +34,7 @@ struct LoginView: View {
                 Button("Login") {
                     print("Login button tapped!")
                     isLoggedIn = true
+                    UserDefaults.standard.set("login user", forKey: "testing")
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
@@ -76,8 +77,10 @@ struct LoginView: View {
                                 switch result {
                                 case .success(let authResults):
                                     print("Apple login succeeded: \(authResults)")
+                                    isLoggedIn=true
                                 case .failure(let error):
                                     print("Apple login failed: \(error)")
+                                    isLoggedIn=true
                                 }
                             })
                             .signInWithAppleButtonStyle(.black) // You can change this to .white or .whiteOutline
@@ -99,7 +102,7 @@ struct LoginView: View {
         if let appleIDCredential = authResults.credential as? ASAuthorizationAppleIDCredential {
             let userIdentifier = appleIDCredential.user
             let email = appleIDCredential.email // If the user has chosen to share their email
-            let fullName = appleIDCredential.fullName // Get the full name (optional)
+            _ = appleIDCredential.fullName // Get the full name (optional)
             
             // You can use this information to either log the user in or register a new user in your system
             // Example:
@@ -109,12 +112,23 @@ struct LoginView: View {
             // (based on your app's flow)
         }
     }
+    
+    
 }
 
 struct LandingPage: View{
+    @State private var test:String = ""
+    
+    init(){
+        if let test = UserDefaults.standard.string(forKey: "testing") {
+                    _test = State(initialValue: test)
+                } else {
+                    _test = State(initialValue: "No user logged in")
+                }
+    }
     var body: some View {
             VStack {
-                Text("Welcome to the Landing Page!")
+                Text(test)
                     .font(.largeTitle)
                     .padding()
                 // Add more content to the landing page here
