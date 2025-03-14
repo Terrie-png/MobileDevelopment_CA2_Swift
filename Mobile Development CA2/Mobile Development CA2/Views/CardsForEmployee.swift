@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct CardsForEmployee: View {
+    var id :UUID
     var profileImage: String // Image name
         var name: String
         var rating: String
@@ -111,6 +112,7 @@ struct CardsForEmployee: View {
 
 #Preview {
     CardsForEmployee(
+        id: UUID(),
                 profileImage: "", // Replace with actual asset name
                name: "Chelsea Knight",
                rating: "4.8",

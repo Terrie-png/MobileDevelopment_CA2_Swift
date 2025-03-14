@@ -8,44 +8,44 @@
 import SwiftUI
 
 struct DashBoardForEmployee: View {
-    @State private var freelancers: [CardsForEmployee] = [
-        CardsForEmployee( profileImage: "ProfilePicture", // Replace with actual asset name
-                          name: "Chelsea Knight",
-                          rating: "4.8",
-                          location: "New York",
-                          experience: "3+ year",
-                          jobType: "Full-time",
-                          jobTitle: "Hardware Engineer",
-                          seniority: "Senior",
-                          salary: "$2400 / month"),
-        CardsForEmployee( profileImage: "ProfilePicture", // Replace with actual asset name
-                          name: "Chelsea Knight",
-                          rating: "4.8",
-                          location: "New York",
-                          experience: "3+ year",
-                          jobType: "Full-time",
-                          jobTitle: "Hardware Engineer",
-                          seniority: "Senior",
-                          salary: "$2400 / month"),
-        CardsForEmployee( profileImage: "ProfilePicture", // Replace with actual asset name
-                          name: "Chelsea Knight",
-                          rating: "4.8",
-                          location: "New York",
-                          experience: "3+ year",
-                          jobType: "Full-time",
-                          jobTitle: "Hardware Engineer",
-                          seniority: "Senior",
-                          salary: "$2400 / month"),
-        CardsForEmployee( profileImage: "ProfilePicture", // Replace with actual asset name
-                          name: "Chelsea Knight",
-                          rating: "4.8",
-                          location: "New York",
-                          experience: "3+ year",
-                          jobType: "Full-time",
-                          jobTitle: "Hardware Engineer",
-                          seniority: "Senior",
-                          salary: "$2400 / month")
-        ]
+//    @State private var freelancers: [CardsForEmployee] = [
+//        CardsForEmployee( profileImage: "ProfilePicture", // Replace with actual asset name
+//                          name: "Chelsea Knight",
+//                          rating: "4.8",
+//                          location: "New York",
+//                          experience: "3+ year",
+//                          jobType: "Full-time",
+//                          jobTitle: "Hardware Engineer",
+//                          seniority: "Senior",
+//                          salary: "$2400 / month"),
+//        CardsForEmployee( profileImage: "ProfilePicture", // Replace with actual asset name
+//                          name: "Chelsea Knight",
+//                          rating: "4.8",
+//                          location: "New York",
+//                          experience: "3+ year",
+//                          jobType: "Full-time",
+//                          jobTitle: "Hardware Engineer",
+//                          seniority: "Senior",
+//                          salary: "$2400 / month"),
+//        CardsForEmployee( profileImage: "ProfilePicture", // Replace with actual asset name
+//                          name: "Chelsea Knight",
+//                          rating: "4.8",
+//                          location: "New York",
+//                          experience: "3+ year",
+//                          jobType: "Full-time",
+//                          jobTitle: "Hardware Engineer",
+//                          seniority: "Senior",
+//                          salary: "$2400 / month"),
+//        CardsForEmployee( profileImage: "ProfilePicture", // Replace with actual asset name
+//                          name: "Chelsea Knight",
+//                          rating: "4.8",
+//                          location: "New York",
+//                          experience: "3+ year",
+//                          jobType: "Full-time",
+//                          jobTitle: "Hardware Engineer",
+//                          seniority: "Senior",
+//                          salary: "$2400 / month")
+//        ]
     var body: some View {
             VStack(spacing: 10) {
                 // 🔍 Header Section
