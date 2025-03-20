@@ -9,10 +9,12 @@ import SwiftUI
 
 struct CompiledMainPageView: View {
     var body: some View {
-        VStack {
-            HeaderView()
-            CardStackView()
-            NavBarView()
+        NavigationStack{
+            VStack {
+                HeaderView()
+                CardStackView()
+                NavBarView()
+            }
         }
        
     }
