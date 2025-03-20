@@ -9,10 +9,42 @@ import SwiftUI
 
 struct HeaderView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        SearchHeaderView()
     }
 }
+struct SearchHeaderView: View {
+    var body: some View {
+        HStack {
+            VStack(alignment: .leading) {
+                Text("Search")
+                    .font(.system(size: 34, weight: .bold))
+                    .foregroundColor(.black)
 
+                Text("Jobs")
+                    .font(.system(size: 34, weight: .bold))
+                    .foregroundColor(.black.opacity(0.8))
+            }
+
+            Spacer()
+
+            Button(action: {
+                print("Filter button tapped")
+            }) {
+                HStack {
+                    Image(systemName: "slider.horizontal.3")
+                        .foregroundColor(.black)
+                    Text("Filters")
+                        .foregroundColor(.black)
+                }
+                .padding(12)
+                .background(Color.white)
+                .clipShape(Capsule())
+                .shadow(radius: 2)
+            }
+        }
+        .padding(.horizontal, 20)
+    }
+}
 #Preview {
     HeaderView()
 }
