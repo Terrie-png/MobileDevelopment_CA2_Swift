@@ -8,11 +8,8 @@
 import SwiftUI
 
 struct HeaderView: View {
-    var body: some View {
-        SearchHeaderView()
-    }
-}
-struct SearchHeaderView: View {
+    
+    @Binding var title
     var body: some View {
         HStack {
             VStack(alignment: .leading) {

@@ -43,7 +43,7 @@ struct LoginView: View {
                 .cornerRadius(10)
                 .padding(.horizontal)
                 .navigationDestination(isPresented: $isLoggedIn){
-                    LandingPage()
+                    CompiledMainPageView()
                 }
                 HStack {
                     Text("Don't have an account?")
