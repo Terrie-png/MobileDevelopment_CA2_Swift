@@ -8,17 +8,15 @@
 import SwiftUI
 
 struct HeaderView: View {
-    
+
+    @Binding var title : String
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text("Search")
+                Text(title)
                     .font(.system(size: 34, weight: .bold))
                     .foregroundColor(.black)
 
-                Text("Jobs")
-                    .font(.system(size: 34, weight: .bold))
-                    .foregroundColor(.black.opacity(0.8))
             }
 
             Spacer()
@@ -42,5 +40,6 @@ struct HeaderView: View {
     }
 }
 #Preview {
-    HeaderView()
+    @Previewable @State var title = "Search Jobs"
+    HeaderView(title: $title)
 }
