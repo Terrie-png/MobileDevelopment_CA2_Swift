@@ -11,7 +11,7 @@ struct CompiledMainPageView: View {
     @State private var selectedTab = 0
     @State private var title = "Search Jobs"
     var body : some View{
-        HeaderView(title: $title)
+        HeaderView(title: $title,selectedTab: $selectedTab)
         ZStack{
             switch selectedTab {
             case 0:
