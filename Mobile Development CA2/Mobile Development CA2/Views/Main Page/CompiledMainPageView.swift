@@ -12,7 +12,7 @@ struct CompiledMainPageView: View {
     @State private var title = "Search Jobs"
     @State private var isVisible = true
     var body : some View{
-        HeaderView(title: $title, isVisible: $isVisible)
+        HeaderView(title: $title,selectedTab: $selectedTab, isVisible: $isVisible)
         NavigationView{
             ZStack{
                 switch selectedTab {
