@@ -20,18 +20,22 @@ struct CompiledMainPageView: View {
                     title = "Search Jobs"
                 }
                 
-                
             case 1:
+                AppliedJobsView().onAppear{
+                    title = "Jobs Applied"
+                }
+            case 2:
                 MessagesView().onAppear{
                     title = "Chats"
                 }
-            case 2:
+            case 3:
                 ProfileView().onAppear{
                     title = "Profile"
                 }
             default:
                 TestView()
             }
+           
             
         }
         
