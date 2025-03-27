@@ -10,40 +10,40 @@ struct User: Identifiable {
 }
 
 // New Detail View
-struct ChatDetailView: View {
-    let user: User
-    
-    var body: some View {
-        VStack(spacing: 20) {
-            // Profile Image
-            if user.profileImage.hasPrefix("system:") {
-                Image(systemName: String(user.profileImage.dropFirst(7)))
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 100, height: 100)
-                    .foregroundColor(.blue)
-            } else {
-                Image(user.profileImage)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 100, height: 100)
-                    .clipShape(Circle())
-            }
-            
-            Text(user.name)
-                .font(.title)
-                .bold()
-            
-            // Add more user details here
-            // For example:
-            // Text("Last active: \(user.time ?? "Unknown")")
-            
-            Spacer()
-        }
-        .padding()
-        .navigationTitle("Chat with \(user.name)")
-    }
-}
+//struct ChatDetailView: View {
+//    let user: User
+//    
+//    var body: some View {
+//        VStack(spacing: 20) {
+//            // Profile Image
+//            if user.profileImage.hasPrefix("system:") {
+//                Image(systemName: String(user.profileImage.dropFirst(7)))
+//                    .resizable()
+//                    .scaledToFit()
+//                    .frame(width: 100, height: 100)
+//                    .foregroundColor(.blue)
+//            } else {
+//                Image(user.profileImage)
+//                    .resizable()
+//                    .scaledToFill()
+//                    .frame(width: 100, height: 100)
+//                    .clipShape(Circle())
+//            }
+//            
+//            Text(user.name)
+//                .font(.title)
+//                .bold()
+//            
+//            // Add more user details here
+//            // For example:
+//            // Text("Last active: \(user.time ?? "Unknown")")
+//            
+//            Spacer()
+//        }
+//        .padding()
+//        .navigationTitle("Chat with \(user.name)")
+//    }
+//}
 
 // Updated ChatView with navigation
 struct ChatView: View {
