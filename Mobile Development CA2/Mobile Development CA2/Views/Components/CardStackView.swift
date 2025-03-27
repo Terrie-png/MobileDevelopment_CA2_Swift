@@ -141,11 +141,51 @@ struct CardStackView: View {
     var body: some View {
         VStack {
             let cards = [
-                CardView.Model(text: "Card 1"),
-                CardView.Model(text: "Card 1"),
-                CardView.Model(text: "Card 2"),
-                CardView.Model(text: "Card 3"),
-                CardView.Model(text: "Card 4")
+                CardView.Model( profileImage: "", // Replace with actual asset name
+                                name: "Chelsea Knight",
+                                rating: "4.8",
+                                location: "New York",
+                                experience: "3+ year",
+                                jobType: "Full-time",
+                                jobTitle: "Hardware Engineer",
+                                seniority: "Senior",
+                                salary: "$2400 / month"),
+                CardView.Model( profileImage: "", // Replace with actual asset name
+                                name: "Chelsea Knight",
+                                rating: "4.8",
+                                location: "New York",
+                                experience: "3+ year",
+                                jobType: "Full-time",
+                                jobTitle: "Hardware Engineer",
+                                seniority: "Senior",
+                                salary: "$2400 / month"),
+                CardView.Model( profileImage: "", // Replace with actual asset name
+                                name: "Chelsea Knight",
+                                rating: "4.8",
+                                location: "New York",
+                                experience: "3+ year",
+                                jobType: "Full-time",
+                                jobTitle: "Hardware Engineer",
+                                seniority: "Senior",
+                                salary: "$2400 / month"),
+                CardView.Model( profileImage: "", // Replace with actual asset name
+                                name: "Chelsea Knight",
+                                rating: "4.8",
+                                location: "New York",
+                                experience: "3+ year",
+                                jobType: "Full-time",
+                                jobTitle: "Hardware Engineer",
+                                seniority: "Senior",
+                                salary: "$2400 / month"),
+                CardView.Model( profileImage: "", // Replace with actual asset name
+                                name: "Chelsea Knight",
+                                rating: "4.8",
+                                location: "New York",
+                                experience: "3+ year",
+                                jobType: "Full-time",
+                                jobTitle: "Hardware Engineer",
+                                seniority: "Senior",
+                                salary: "$2400 / month")
             ]
             
             let model = SwipeableCardsView.Model(cards: cards)

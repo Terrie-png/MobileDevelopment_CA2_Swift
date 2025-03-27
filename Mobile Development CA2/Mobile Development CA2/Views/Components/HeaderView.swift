@@ -9,7 +9,6 @@ import SwiftUI
 
 struct HeaderView: View {
     
-    @Binding var title
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
