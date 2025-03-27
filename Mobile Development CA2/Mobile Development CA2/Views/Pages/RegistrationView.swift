@@ -53,6 +53,7 @@ struct RegistrationView: View {
                 // Register Button
                 Button(action: {
                     registerUser()
+                        
                 }) {
                     Text("Register")
                         .font(.headline)

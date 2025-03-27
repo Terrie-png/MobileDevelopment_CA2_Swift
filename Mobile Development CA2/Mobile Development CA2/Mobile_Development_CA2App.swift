@@ -11,7 +11,7 @@ import SwiftUI
 struct Mobile_Development_CA2App: App {
     var body: some Scene {
         WindowGroup {
-            LoginView()
+            CompiledMainPageView()
         }
     }
 }
