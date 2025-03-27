@@ -8,15 +8,36 @@
 import SwiftUI
 
 struct CompiledMainPageView: View {
-    var body: some View {
-        NavigationStack{
-            VStack {
-                HeaderView()
-                CardStackView()
-                NavBarView()
+    @State private var selectedTab = 0
+    @State private var title = "Search Jobs"
+    var body : some View{
+        HeaderView(title: $title)
+        ZStack{
+            switch selectedTab {
+            case 0:
+                
+                CardStackView().onAppear{
+                    title = "Search Jobs"
+                }
+                
+                
+            case 1:
+                MessagesView().onAppear{
+                    title = "Chats"
+                }
+            case 2:
+                ProfileView().onAppear{
+                    title = "Profile"
+                }
+            default:
+                TestView()
             }
+            
         }
-       
+        
+        VStack{
+            NavBarView(selectedTab: $selectedTab)
+        }
     }
 }
 
