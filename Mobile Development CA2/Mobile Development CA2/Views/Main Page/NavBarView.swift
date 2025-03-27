@@ -68,7 +68,6 @@ struct NavBarView: View {
 //                }
 //            }
 //            .padding(.bottom, 10)
-        Spacer()
         HStack {
                     Spacer()
 
@@ -165,8 +164,8 @@ struct Contentview1: View{
             case 0:
                 TestView()
                 
-            case 1:
-                AppliedJobsView()
+//            case 1:
+//                JobApplicationsView()
             case 2:
                 MessagesView()
             case 3:
