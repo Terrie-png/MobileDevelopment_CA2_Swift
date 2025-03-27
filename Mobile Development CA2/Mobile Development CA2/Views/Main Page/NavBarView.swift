@@ -78,12 +78,6 @@ struct TestView: View {
     }
 }
 
-struct ProfileView: View {
-    var body: some View {
-        Text("This is the Profile View")
-            .navigationBarTitle("Profile", displayMode: .inline)
-    }
-}
 
 struct MessagesView: View {
     var body: some View {
