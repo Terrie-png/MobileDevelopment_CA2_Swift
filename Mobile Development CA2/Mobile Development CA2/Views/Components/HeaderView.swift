@@ -11,30 +11,33 @@ struct HeaderView: View {
     
     @Binding var title : String
     @Binding var selectedTab: Int
-    @State private var showFilterText = false
+    @State private var showFilterText = true
     @Binding var isVisible: Bool
     var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                Text(title)
-                    .font(.system(size: 34, weight: .bold))
+        if(isVisible){
+            
+            HStack {
+                VStack(alignment: .leading) {
+                    Text(title)
+                        .font(.system(size: 34, weight: .bold))
+                        .foregroundColor(.black)
+                    
+                    
+                }
+                Spacer()
+                
+                
+                if selectedTab == 0 {
+                    filterButton
+                }
+                Spacer()
+                Image(systemName: "bell")
+                    .font(.system(size: 20, weight: .bold))
                     .foregroundColor(.black)
-
-
+                
             }
-        Spacer()
-        Image(systemName: "bell")
-            .font(.system(size: 20, weight: .bold))
-            .foregroundColor(.black)
-
-
-        if selectedTab == 0 {
-            filterButton
-    }
-    Spacer()
-
-}
-.padding(.horizontal, 20)
+            .padding(.horizontal, 20)
+        }
 }
 private var filterButton: some View {
 Button(action: {
