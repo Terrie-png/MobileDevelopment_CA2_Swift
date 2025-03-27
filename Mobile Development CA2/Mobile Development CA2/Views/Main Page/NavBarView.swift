@@ -84,17 +84,25 @@ struct NavBarView: View {
                     }
 
                     Spacer()
-
+            VStack{
+                Image(systemName: "list.bullet").resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 25, height: 25)
+                    .foregroundColor(selectedTab == 1 ? .blue : .gray)
+            }.onTapGesture {
+                selectedTab = 1
+            }
+            Spacer()
                     // Chat Tab
                     VStack {
                         Image(systemName: "message")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 25, height: 25)
-                            .foregroundColor(selectedTab == 1 ? .blue : .gray)
+                            .foregroundColor(selectedTab == 2 ? .blue : .gray)
                     }
                     .onTapGesture {
-                        selectedTab = 1
+                        selectedTab = 2
                     }
 
                     Spacer()
@@ -105,10 +113,10 @@ struct NavBarView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 25, height: 25)
-                            .foregroundColor(selectedTab == 2 ? .blue : .gray)
+                            .foregroundColor(selectedTab == 3 ? .blue : .gray)
                     }
                     .onTapGesture {
-                        selectedTab = 2
+                        selectedTab = 3
                     }
 
                     Spacer()
@@ -156,9 +164,11 @@ struct Contentview1: View{
             case 0:
                 TestView()
                 
-            case 1:
-                MessagesView()
+//            case 1:
+//                JobApplicationsView()
             case 2:
+                MessagesView()
+            case 3:
                 ProfileView()
             default:
                 TestView()
