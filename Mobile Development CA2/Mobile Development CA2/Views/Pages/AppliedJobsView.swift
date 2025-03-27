@@ -91,14 +91,14 @@ struct AppliedJobsView: View {
         ),
         JobApplication(
             profileImage: "", // Replace with actual asset name
-            name: "Chelsea Knight",
-            rating: "4.8",
+            name: "Jason Njoku",
+            rating: "5",
             location: "New York",
             experience: "3+ year",
             jobType: "Full-time",
             jobTitle: "Hardware Engineer",
             seniority: "Senior",
-            salary: "$2400 / month",
+            salary: "$8400 / month",
             status: .rejected,
             applicationDate: Date().addingTimeInterval(-60 * 24 * 60 * 60)
         )
@@ -227,17 +227,6 @@ struct JobApplicationDetailView: View {
                     
                     // Action Buttons
                     HStack(spacing: 15) {
-                        Button(action: {
-                            // Edit Application
-                        }) {
-                            Text("Edit Application")
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
-                        }
-                        
                         Button(action: {
                             // Withdraw Application
                         }) {

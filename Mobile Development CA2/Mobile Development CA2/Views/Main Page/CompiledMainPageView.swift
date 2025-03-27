@@ -10,9 +10,9 @@ import SwiftUI
 struct CompiledMainPageView: View {
     @State private var selectedTab = 0
     @State private var title = "Search Jobs"
-    @State private var isHeaderVisible = true
+    @State private var isVisible = true
     var body : some View{
-        HeaderView(title: $title, isVisible: $isHeaderVisible)
+        HeaderView(title: $title, isVisible: $isVisible)
         NavigationView{
             ZStack{
                 switch selectedTab {
@@ -20,23 +20,23 @@ struct CompiledMainPageView: View {
                     
                     CardStackView().onAppear{
                         title = "Search Jobs"
-                        isHeaderVisible = true
+                        isVisible = true
                     }
                     
                 case 1:
-                    AppliedJobsView(isVisible: $isHeaderVisible).onAppear{
+                    AppliedJobsView(isVisible: $isVisible).onAppear{
                         title = "Jobs Applied"
-                        isHeaderVisible = true
+                        isVisible = true
                     }
                 case 2:
                     MessagesView().onAppear{
                         title = "Chats"
-                        isHeaderVisible = true
+                        isVisible = true
                     }
                 case 3:
                     ProfileView().onAppear{
                         title = "Profile"
-                        isHeaderVisible = true
+                        isVisible = true
                     }
                 default:
                     TestView()
@@ -46,7 +46,7 @@ struct CompiledMainPageView: View {
         }
         
         VStack{
-            NavBarView(selectedTab: $selectedTab)
+            NavBarView(selectedTab: $selectedTab, isVisible: $isVisible)
         }
     }
 }
