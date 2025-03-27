@@ -10,33 +10,43 @@ import SwiftUI
 struct CompiledMainPageView: View {
     @State private var selectedTab = 0
     @State private var title = "Search Jobs"
+    @State private var isVisible = true
     var body : some View{
-        HeaderView(title: $title,selectedTab: $selectedTab)
-        ZStack{
-            switch selectedTab {
-            case 0:
-                
-                CardStackView().onAppear{
-                    title = "Search Jobs"
+        HeaderView(title: $title,selectedTab: $selectedTab, isVisible: $isVisible)
+        NavigationView{
+            ZStack{
+                switch selectedTab {
+                case 0:
+                    
+                    CardStackView().onAppear{
+                        title = "Search Jobs"
+                        isVisible = true
+                    }
+                    
+                case 1:
+                    AppliedJobsView(isVisible: $isVisible).onAppear{
+                        title = "Jobs Applied"
+                        isVisible = true
+                    }
+                case 2:
+                    MessagesView().onAppear{
+                        title = "Chats"
+                        isVisible = true
+                    }
+                case 3:
+                    ProfileView().onAppear{
+                        title = "Profile"
+                        isVisible = true
+                    }
+                default:
+                    TestView()
                 }
-                
-                
-            case 1:
-                MessagesView().onAppear{
-                    title = "Chats"
-                }
-            case 2:
-                ProfileView().onAppear{
-                    title = "Profile"
-                }
-            default:
-                TestView()
             }
             
         }
         
         VStack{
-            NavBarView(selectedTab: $selectedTab)
+            NavBarView(selectedTab: $selectedTab, isVisible: $isVisible)
         }
     }
 }
