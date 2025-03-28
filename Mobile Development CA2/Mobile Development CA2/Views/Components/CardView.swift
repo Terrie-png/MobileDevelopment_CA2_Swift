@@ -87,7 +87,7 @@ struct CardView: View {
             }) {
                 Text("See details")
                     .font(.system(size: 18, weight: .bold))
-                    .foregroundColor(.black)
+                    .foregroundColor(Color.primary    )
                     .padding(.horizontal, 25)
                     .padding(.vertical, 12)
                     .background(Color.black.opacity(0.9))
