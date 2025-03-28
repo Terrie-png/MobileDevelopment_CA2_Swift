@@ -9,6 +9,12 @@ struct ProfileView: View {
                             .frame(width: 200, height: 200)
                             .offset(y: -130) .padding(.bottom, -130)
             VStack() {
+//                NavigationLink(destination:test()){
+//                    HStack{
+//                        Image(systemName: "square.and.arrow.up")
+//                        Text("Upload Resume")
+//                    }
+//                }
                 Divider()
                 NavigationLink(destination:test()){
                     HStack{
@@ -24,6 +30,7 @@ struct ProfileView: View {
                     }
                 }
                     Divider()
+                Spacer()
                     HStack(spacing: 15) {
                         Button(action: {
                             // Withdraw Application
