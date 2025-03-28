@@ -29,7 +29,22 @@ struct CompiledMainPageView: View {
                         isVisible = true
                     }
                 case 2:
-                    MessagesView().onAppear{
+                    ChatView(users: [
+                        User(profileImage: "system:person.crop.circle.fill",
+                             name: "Alice",
+                             lastMessage: "Hey, how are you?",
+                             time: "10:30 AM"),
+                        
+                        User(profileImage: "system:person.crop.circle",
+                             name: "Bob",
+                             lastMessage: "Meeting at 3 PM",
+                             time: "Yesterday"),
+                        
+                        User(profileImage: "system:person.2.circle.fill",
+                             name: "Team Group",
+                             lastMessage: "Project update",
+                             time: "2 days ago")
+                    ]).onAppear{
                         title = "Chats"
                         isVisible = true
                     }
