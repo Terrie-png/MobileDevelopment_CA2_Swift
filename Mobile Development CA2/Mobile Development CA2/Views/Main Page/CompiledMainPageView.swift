@@ -13,7 +13,8 @@ struct CompiledMainPageView: View {
     @State private var isVisible = true
     var body : some View{
         HeaderView(title: $title,selectedTab: $selectedTab, isVisible: $isVisible)
-        NavigationView{
+
+        NavigationStack{
             ZStack{
                 switch selectedTab {
                 case 0:
@@ -54,15 +55,17 @@ struct CompiledMainPageView: View {
                         isVisible = true
                     }
                 default:
-                    TestView()
+                    CardStackView().onAppear{
+                        title = "Search Jobs"
+                        isVisible = true
+                    }
                 }
             }
             
-        }
-        
-        VStack{
+
+            
+        }.background(Color.secondaryColor)
             NavBarView(selectedTab: $selectedTab, isVisible: $isVisible)
-        }
     }
 }
 

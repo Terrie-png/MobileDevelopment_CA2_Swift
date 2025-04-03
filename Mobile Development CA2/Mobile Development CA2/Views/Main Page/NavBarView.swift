@@ -9,65 +9,71 @@ struct NavBarView: View {
     @Binding var isVisible: Bool
     var body: some View {
         if(isVisible){
-            HStack {
-                Spacer()
-                
-                // Main Tab
-                VStack {
-                    Image(systemName: "house")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 25, height: 25)
-                        .foregroundColor(selectedTab == 0 ? .blue : .gray)
+
+            ZStack {
+                HStack {
+                    
+                    
+                    Spacer()
+                    
+                    // Main Tab
+                    VStack {
+                        Image(systemName: "house")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 25, height: 25)
+                            .foregroundColor(selectedTab == 0 ? .primaryColor : .gray)
+                    }
+                    .onTapGesture {
+                        selectedTab = 0
+                    }
+                    
+                    Spacer()
+                    VStack{
+                        Image(systemName: "list.bullet").resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 25, height: 25)
+                            .foregroundColor(selectedTab == 1 ? .primaryColor : .gray)
+                    }.onTapGesture {
+                        selectedTab = 1
+                    }
+                    Spacer()
+                    // Chat Tab
+                    VStack {
+                        Image(systemName: "message")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 25, height: 25)
+                            .foregroundColor(selectedTab == 2 ? .primaryColor : .gray)
+                    }
+                    .onTapGesture {
+                        selectedTab = 2
+                    }
+                    
+                    Spacer()
+                    
+                    // Profile Tab
+                    VStack {
+                        Image(systemName: "person")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 25, height: 25)
+                            .foregroundColor(selectedTab == 3 ? .primaryColor : .gray)
+                    }
+                    .onTapGesture {
+                        selectedTab = 3
+                    }
+                    
+                    Spacer()
                 }
-                .onTapGesture {
-                    selectedTab = 0
-                }
-                
-                Spacer()
-                VStack{
-                    Image(systemName: "list.bullet").resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 25, height: 25)
-                        .foregroundColor(selectedTab == 1 ? .blue : .gray)
-                }.onTapGesture {
-                    selectedTab = 1
-                }
-                Spacer()
-                // Chat Tab
-                VStack {
-                    Image(systemName: "message")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 25, height: 25)
-                        .foregroundColor(selectedTab == 2 ? .blue : .gray)
-                }
-                .onTapGesture {
-                    selectedTab = 2
-                }
-                
-                Spacer()
-                
-                // Profile Tab
-                VStack {
-                    Image(systemName: "person")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 25, height: 25)
-                        .foregroundColor(selectedTab == 3 ? .blue : .gray)
-                }
-                .onTapGesture {
-                    selectedTab = 3
-                }
-                
-                Spacer()
-            }
-            .padding()
-            .background(Color.white)
-            .cornerRadius(20)
-            .shadow(radius: 5)
-            .padding(.horizontal)
+                .padding()
+                .background(Color.backgroundColor)
+                .cornerRadius(20)
+                .shadow(radius: 5)
+                .padding(.horizontal)
+            }.background(Color.secondaryColor)
         }
+           
     }
 }
 

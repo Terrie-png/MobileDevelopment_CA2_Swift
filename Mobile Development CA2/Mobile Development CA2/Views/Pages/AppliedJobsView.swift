@@ -104,6 +104,7 @@ struct AppliedJobsView: View {
             }
         }
         .listStyle(PlainListStyle())
+        .background(Color.secondaryColor)
     }
 }
 

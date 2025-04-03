@@ -15,8 +15,9 @@ struct ProfileView: View {
 //                        Text("Upload Resume")
 //                    }
 //                }
-                Divider()
-                NavigationLink(destination:test()){
+
+                Divider().background(Color.secondaryColor)
+                NavigationLink(destination:LocationSettingsView()){
                     HStack{
                         Image(systemName: "gearshape")
                         Text("Settings")
