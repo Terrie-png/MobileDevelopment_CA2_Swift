@@ -26,15 +26,18 @@ struct HeaderView: View {
                 }
                 Spacer()
                 
-                
-                if selectedTab == 0 {
-                    filterButton
+                HStack{
+                    if selectedTab == 0 {
+                        filterButton
+                    }
+                    
+                    Image(systemName: "bell")
+                        .font(.system(size: 20, weight: .bold))
+                        .foregroundColor(.black).padding(12)
+                        .background(Color.white)
+                        .clipShape(Capsule())
+                        .shadow(radius: 2).padding(.leading,10)
                 }
-                Spacer()
-                Image(systemName: "bell")
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(.black)
-                
             }
             .padding(.horizontal, 20)
         }
@@ -46,8 +49,11 @@ Button(action: {
     HStack {
         Image(systemName: "slider.horizontal.3")
             .foregroundColor(.black)
-        Text("Filters")
-            .foregroundColor(.black)
+        if(true){
+            Text("Filters")
+                .foregroundColor(.black)
+        
+        }
     }
     .padding(12)
     .background(Color.white)

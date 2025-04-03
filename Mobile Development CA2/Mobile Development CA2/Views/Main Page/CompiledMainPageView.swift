@@ -21,7 +21,7 @@ struct CompiledMainPageView: View {
                     CardStackView().onAppear{
                         title = "Search Jobs"
                         isVisible = true
-                    }
+                    }.padding(.bottom, 500)
                     
                 case 1:
                     AppliedJobsView(isVisible: $isVisible).onAppear{
