@@ -44,7 +44,7 @@ struct CompiledMainPageView: View {
                              name: "Team Group",
                              lastMessage: "Project update",
                              time: "2 days ago")
-                    ]).onAppear{
+                    ],isVisible: $isVisible).onAppear{
                         title = "Chats"
                         isVisible = true
                     }

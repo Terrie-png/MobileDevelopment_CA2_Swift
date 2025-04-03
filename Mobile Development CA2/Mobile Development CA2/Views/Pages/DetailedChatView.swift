@@ -12,6 +12,7 @@ struct ChatDetailView: View {
     @State private var messages: [Message] = []
     @State private var newMessageText = ""
     @State private var scrollProxy: ScrollViewProxy? = nil
+    @Binding var isVisible : Bool 
     
     // Sample message data model
     struct Message: Identifiable {
@@ -19,9 +20,11 @@ struct ChatDetailView: View {
         let text: String
         let isCurrentUser: Bool
         let timestamp: Date
+    
     }
     
     var body: some View {
+        
         VStack(spacing: 0) {
             // Header with user info
             VStack(spacing: 8) {
@@ -47,7 +50,7 @@ struct ChatDetailView: View {
                     .foregroundColor(.green)
             }
             .padding()
-            .onAppear{false}
+           
             
 
             
@@ -66,6 +69,7 @@ struct ChatDetailView: View {
                 .onAppear {
                     scrollProxy = proxy
                     loadMessages()
+                    
                 }
                 .onChange(of: messages.count) { _ in
                     scrollToBottom(proxy: proxy)
@@ -104,6 +108,7 @@ struct ChatDetailView: View {
                 }
             }
         }
+        .onAppear{isVisible = false}
     }
     
     // Message bubble view
