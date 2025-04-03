@@ -25,7 +25,8 @@ struct CardView: View {
     var dragOffset: CGSize
     var isTopCard: Bool
     var isSecondCard: Bool
-
+    @State var showModal = false
+    @State var message = ""
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             
@@ -47,52 +48,82 @@ struct CardView: View {
                         // Like action
                     }) {
                         
-                            
-                            Image(systemName: "heart.fill")
-                                .foregroundColor(.black)
-                                .font(.system(size: 22))
+                        
+                        Image(systemName: "heart.fill")
+                            .foregroundColor(.black)
+                            .font(.system(size: 22))
                     }
                     
                 }
             }
-
+            
             // Name
             Text(model.name)
                 .font(.system(size: 24, weight: .bold))
-
+            
             // Rating & Info Badges
-        VStack(spacing: 8) {
+            VStack(spacing: 8) {
                 badgeView(icon: "star.fill", text: model.rating)
                 badgeView(icon: "mappin.and.ellipse", text: model.location)
                 badgeView(icon: "clock.fill", text: model.experience)
                 badgeView(icon: "briefcase.fill", text: model.jobType )
             }
-
+            
             // Job Title
             Text(model.jobTitle)
                 .foregroundColor(.gray)
                 .font(.system(size: 16, weight: .medium))
-
+            
             // Seniority & Salary
             Text(model.jobType)
                 .font(.system(size: 22, weight: .bold))
-
+            
             Text(model.salary)
                 .font(.system(size: 20, weight: .bold))
                 .foregroundColor(.black)
-
+            
             // See Details Button
             Button(action: {
-                // Navigate or show details
+                // Show modal when button is pressed
+                showModal.toggle()
             }) {
                 Text("See details")
                     .font(.system(size: 18, weight: .bold))
-                    .foregroundColor(Color.primary    )
+                    .foregroundColor(Color.primary)
                     .padding(.horizontal, 25)
                     .padding(.vertical, 12)
                     .background(Color.black.opacity(0.9))
                     .clipShape(Capsule())
             }
+            .padding(.top, 5)
+            .sheet(isPresented: $showModal) {
+                VStack {
+                    HStack{
+                        Image.ProfilePicture// Replace with actual asset name
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 50, height: 50)
+                            .clipShape(Circle())
+                        Text(model.name)
+                            .font(.system(size: 24, weight: .bold))
+                        
+                    }
+                    Text("Enter your message:")
+                        .font(.title2)
+                        .padding()
+                    
+                    TextField("Type your message here", text: $message)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding()
+                    
+                    Button("Close") {
+                        // Close the modal
+                        showModal = false
+                    }
+                    .padding()
+                }
+            }
+        
             .padding(.top, 5)
         }
         .padding(20)

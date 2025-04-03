@@ -5,7 +5,29 @@
 //  Created by Student on 03/04/2025.
 //
 
+import SwiftUICore
+
 let EmployeeSamples = [
-    "test"
+    CardView.Model( profileImage:"ProfileImage1", name: "Chelsea Knight", rating: "4.8", location: "New York", experience: "3+ year", jobType: "Full-time", jobTitle: "Hardware Engineer", seniority: "Senior", salary: "$2400 / month"),
+    CardView.Model( profileImage: "ProfileImage1", name: "Liam Foster", rating: "4.6", location: "San Francisco", experience: "5+ years", jobType: "Part-time", jobTitle: "Software Engineer", seniority: "Mid", salary: "$1800 / month"),
+    CardView.Model( profileImage: "ProfileImage1", name: "Ava Thompson", rating: "4.9", location: "Chicago", experience: "4+ years", jobType: "Contract", jobTitle: "Product Manager", seniority: "Lead", salary: "$3000 / month"),
+    CardView.Model( profileImage: "ProfileImage1", name: "James Morgan", rating: "4.7", location: "Austin", experience: "2+ years", jobType: "Full-time", jobTitle: "UI/UX Designer", seniority: "Junior", salary: "$2200 / month"),
+    CardView.Model( profileImage: "ProfileImage1", name: "Sophia Lee", rating: "4.8", location: "Seattle", experience: "6+ years", jobType: "Full-time", jobTitle: "Data Scientist", seniority: "Senior", salary: "$3500 / month"),
+    CardView.Model( profileImage: "ProfileImage1", name: "Oliver Smith", rating: "4.5", location: "Los Angeles", experience: "1+ year", jobType: "Intern", jobTitle: "Marketing Assistant", seniority: "Intern", salary: "$1200 / month"),
+    CardView.Model( profileImage: "ProfileImage1", name: "Isabella Walker", rating: "4.8", location: "New York", experience: "7+ years", jobType: "Full-time", jobTitle: "Systems Architect", seniority: "Senior", salary: "$5000 / month"),
+    CardView.Model( profileImage: "ProfileImage1", name: "Noah Davis", rating: "4.6", location: "Miami", experience: "4+ years", jobType: "Freelance", jobTitle: "Web Developer", seniority: "Mid", salary: "$2800 / month"),
+    CardView.Model( profileImage: "ProfileImage1", name: "Ethan Harris", rating: "4.7", location: "San Diego", experience: "3+ years", jobType: "Full-time", jobTitle: "Network Engineer", seniority: "Senior", salary: "$2700 / month"),
+    CardView.Model( profileImage: "ProfileImage1", name: "Mia Perez", rating: "4.9", location: "Denver", experience: "2+ years", jobType: "Full-time", jobTitle: "QA Engineer", seniority: "Mid", salary: "$2300 / month"),
+    CardView.Model( profileImage: "ProfileImage1", name: "Jackson Clark", rating: "4.5", location: "Dallas", experience: "8+ years", jobType: "Part-time", jobTitle: "Cybersecurity Specialist", seniority: "Lead", salary: "$4000 / month"),
+    CardView.Model( profileImage: "ProfileImage1", name: "Emma Johnson", rating: "4.8", location: "Portland", experience: "3+ years", jobType: "Full-time", jobTitle: "Machine Learning Engineer", seniority: "Senior", salary: "$3300 / month"),
+    CardView.Model( profileImage: "ProfileImage1", name: "Lucas Anderson", rating: "4.4", location: "Boston", experience: "4+ years", jobType: "Full-time", jobTitle: "DevOps Engineer", seniority: "Mid", salary: "$2600 / month"),
+    CardView.Model( profileImage: "ProfileImage1", name: "Amelia Martin", rating: "5.0", location: "Chicago", experience: "6+ years", jobType: "Contract", jobTitle: "Data Analyst", seniority: "Lead", salary: "$3100 / month"),
+    CardView.Model( profileImage: "ProfileImage1", name: "Benjamin White", rating: "4.8", location: "Seattle", experience: "1+ year", jobType: "Intern", jobTitle: "Graphic Designer", seniority: "Intern", salary: "$1500 / month"),
+    CardView.Model( profileImage: "ProfileImage1", name: "Harper Martinez", rating: "4.6", location: "San Francisco", experience: "5+ years", jobType: "Full-time", jobTitle: "Cloud Engineer", seniority: "Senior", salary: "$3500 / month"),
+    CardView.Model( profileImage: "ProfileImage1", name: "Mason Wilson", rating: "4.7", location: "Austin", experience: "4+ years", jobType: "Part-time", jobTitle: "Software Tester", seniority: "Junior", salary: "$2000 / month"),
+    CardView.Model( profileImage: "ProfileImage1", name: "Charlotte Young", rating: "4.9", location: "New York", experience: "7+ years", jobType: "Full-time", jobTitle: "Full Stack Developer", seniority: "Senior", salary: "$4000 / month"),
+    CardView.Model( profileImage: "ProfileImage1", name: "Sebastian King", rating: "4.5", location: "Los Angeles", experience: "6+ years", jobType: "Contract", jobTitle: "Product Designer", seniority: "Lead", salary: "$2900 / month"),
+    CardView.Model( profileImage: "ProfileImage1", name: "Zoe Scott", rating: "4.8", location: "Miami", experience: "3+ years", jobType: "Freelance", jobTitle: "SEO Specialist", seniority: "Mid", salary: "$2300 / month")
 ]
+
 
