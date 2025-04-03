@@ -60,7 +60,7 @@ struct SwipeableCardsView: View {
                         CardView(
                             model: card,
                             size: geometry.size,
-                            dragOffset: .zero,
+                            dragOffset: dragState,
                             isTopCard: isTop,
                             isSecondCard: isSecond
                         )
