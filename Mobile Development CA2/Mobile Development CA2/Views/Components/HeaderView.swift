@@ -49,7 +49,7 @@ Button(action: {
     HStack {
         Image(systemName: "slider.horizontal.3")
             .foregroundColor(.black)
-        if(true){
+        if(false){
             Text("Filters")
                 .foregroundColor(.black)
         
