@@ -28,4 +28,9 @@ class EmployeesController{
         EmployeesIntrested.removeAll()
     }
     
+    func GetAllEmployees()-> [CardView.Model]{
+        return EmployeesIntrested
+    }
+    
+    
 }
