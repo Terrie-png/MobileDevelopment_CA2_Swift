@@ -72,39 +72,43 @@ struct AppliedJobsView: View {
     ]
     @Binding var isVisible : Bool
     var body: some View {
-        List(jobApplications) { application in
-            NavigationLink(destination: JobApplicationDetailView(jobApplication: application, isVisible: $isVisible)) {
-                HStack {
-                    // Placeholder for profile image
-                    Image(systemName: "person.crop.circle.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 50, height: 50)
-                        .foregroundColor(.gray)
-                    
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(application.name)
-                            .font(.headline)
+        ZStack{
+            Color.secondaryColor.ignoresSafeArea()
+            List(jobApplications) { application in
+                NavigationLink(destination: JobApplicationDetailView(jobApplication: application, isVisible: $isVisible)) {
+                    HStack {
+                        // Placeholder for profile image
+                        Image(systemName: "person.crop.circle.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 50, height: 50)
+                            .foregroundColor(.gray)
                         
-                        Text(application.jobTitle)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                        
-                        HStack {
-                            Text(application.status.rawValue)
-                                .font(.caption2)
-                                .padding(4)
-                                .background(application.status.statusColor)
-                                .foregroundColor(.white)
-                                .cornerRadius(4)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(application.name)
+                                .font(.headline)
+                            
+                            Text(application.jobTitle)
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            
+                            HStack {
+                                Text(application.status.rawValue)
+                                    .font(.caption2)
+                                    .padding(4)
+                                    .background(application.status.statusColor)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(4)
+                            }
                         }
                     }
-                }
-                .padding(.vertical, 8)
+                    .padding(.vertical, 8)
+                }.listRowBackground(Color.clear)
             }
+            
         }
         .listStyle(PlainListStyle())
-        .background(Color.secondaryColor)
+        .background(Color.clear)
     }
 }
 

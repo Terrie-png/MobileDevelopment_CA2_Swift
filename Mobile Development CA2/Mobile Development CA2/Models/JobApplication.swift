@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+ 
 struct JobApplication: Identifiable, Hashable {
     let id = UUID()
     let profileImage: String

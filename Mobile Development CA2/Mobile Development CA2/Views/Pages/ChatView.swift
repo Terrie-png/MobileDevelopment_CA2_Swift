@@ -92,7 +92,7 @@ struct ChatView: View {
                     .padding(.vertical, 8)
                     
                     
-                }
+                }.listRowBackground(Color.clear)
                 .swipeActions {
                     Button("Delete", role: .destructive) {
                         // Handle delete action
