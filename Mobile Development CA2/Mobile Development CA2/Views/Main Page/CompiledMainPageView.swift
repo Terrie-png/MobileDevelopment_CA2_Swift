@@ -12,58 +12,69 @@ struct CompiledMainPageView: View {
     @State private var title = "Search Jobs"
     @State private var isVisible = true
     var body : some View{
-        HeaderView(title: $title,selectedTab: $selectedTab, isVisible: $isVisible)
-        NavigationView{
-            ZStack{
-                switch selectedTab {
-                case 0:
-                    
-                    CardStackView().onAppear{
-                        title = "Search Jobs"
-                        isVisible = true
-                    }
-                    
-                case 1:
-                    AppliedJobsView(isVisible: $isVisible).onAppear{
-                        title = "Jobs Applied"
-                        isVisible = true
-                    }
-                case 2:
-                    ChatView(users: [
-                        User(profileImage: "system:person.crop.circle.fill",
-                             name: "Alice",
-                             lastMessage: "Hey, how are you?",
-                             time: "10:30 AM"),
-                        
-                        User(profileImage: "system:person.crop.circle",
-                             name: "Bob",
-                             lastMessage: "Meeting at 3 PM",
-                             time: "Yesterday"),
-                        
-                        User(profileImage: "system:person.2.circle.fill",
-                             name: "Team Group",
-                             lastMessage: "Project update",
-                             time: "2 days ago")
-                    ],isVisible: $isVisible).onAppear{
-                        title = "Chats"
-                        isVisible = true
-                    }
-                case 3:
-                    ProfileView().onAppear{
-                        title = "Profile"
-                        isVisible = true
-                    }
-                default:
-                    TestView()
-                }
-            }
+        ZStack{
             
-        }
-        
-        VStack{
-            NavBarView(selectedTab: $selectedTab, isVisible: $isVisible)
+            Color.secondaryColor.ignoresSafeArea()
+            VStack{
+                HeaderView(title: $title,selectedTab: $selectedTab, isVisible: $isVisible).padding(.top)
+                
+                NavigationStack{
+                    ZStack{
+                        switch selectedTab {
+                        case 0:
+                            
+                            CardStackView().onAppear{
+                                title = "Search Jobs"
+                                isVisible = true
+                            }
+                            
+                        case 1:
+                            AppliedJobsView(isVisible: $isVisible).onAppear{
+                                title = "Jobs Applied"
+                                isVisible = true
+                            }
+                        case 2:
+                            ChatView(users: [
+                                User(profileImage: "system:person.crop.circle.fill",
+                                     name: "Alice",
+                                     lastMessage: "Hey, how are you?",
+                                     time: "10:30 AM"),
+                                
+                                User(profileImage: "system:person.crop.circle",
+                                     name: "Bob",
+                                     lastMessage: "Meeting at 3 PM",
+                                     time: "Yesterday"),
+                                
+                                User(profileImage: "system:person.2.circle.fill",
+                                     name: "Team Group",
+                                     lastMessage: "Project update",
+                                     time: "2 days ago")
+                            ],isVisible: $isVisible).onAppear{
+                                title = "Chats"
+                                isVisible = true
+                            }
+                        case 3:
+                            ProfileView().onAppear{
+                                title = "Profile"
+                                isVisible = true
+                            }
+                        default:
+                            CardStackView().onAppear{
+                                title = "Search Jobs"
+                                isVisible = true
+                            }
+                            Spacer()
+                        }
+                    }
+                    
+                    
+                    
+                }
+                NavBarView(selectedTab: $selectedTab, isVisible: $isVisible).padding(.bottom)
+            }
         }
     }
+    
 }
 
 #Preview {

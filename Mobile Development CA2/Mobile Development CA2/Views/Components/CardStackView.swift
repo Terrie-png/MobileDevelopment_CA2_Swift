@@ -63,8 +63,8 @@ struct CardStackView: View {
                 print(model.swipedCards)
                 model.reset()
             }
+            .padding()
         }
-        .padding()
     }
 }
 #Preview {

@@ -15,31 +15,34 @@ struct HeaderView: View {
     @Binding var isVisible: Bool
     var body: some View {
         if(isVisible){
-            
-            HStack {
-                VStack(alignment: .leading) {
-                    Text(title)
-                        .font(.system(size: 34, weight: .bold))
-                        .foregroundColor(.black)
+
+            ZStack {
+                HStack {
                     
-                    
-                }
-                Spacer()
-                
-                HStack{
-                    if selectedTab == 0 {
-                        filterButton
+                    VStack(alignment: .leading) {
+                        Text(title)
+                            .font(.system(size: 34, weight: .bold))
+                            .foregroundColor(.black)
+                        
+                        
                     }
+                    Spacer()
                     
-                    Image(systemName: "bell")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(.black).padding(12)
-                        .background(Color.white)
-                        .clipShape(Capsule())
-                        .shadow(radius: 2).padding(.leading,10)
+                    HStack{
+                        if selectedTab == 0 {
+                            filterButton
+                        }
+                        
+                        Image(systemName: "bell")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundColor(.black).padding(12)
+                            .background(Color.white)
+                            .clipShape(Capsule())
+                            .shadow(radius: 2).padding(.leading,10)
+                    }
                 }
-            }
-            .padding(.horizontal, 20)
+                .padding(.horizontal, 20)
+            }.background(Color.secondaryColor).ignoresSafeArea(.container, edges: .bottom)
         }
 }
 private var filterButton: some View {
@@ -69,7 +72,7 @@ Button(action: {
 #Preview {
     @Previewable @State var title = "Search Jobs"
     @Previewable  @State var selectedTab = 0
-    @Previewable  @State var isVisible =  false
+    @Previewable  @State var isVisible =  true
     
     HeaderView(title: $title, selectedTab: $selectedTab,isVisible: $isVisible)
 }
