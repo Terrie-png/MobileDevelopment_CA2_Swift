@@ -16,7 +16,7 @@ struct CompiledMainPageView: View {
             
             Color.secondaryColor.ignoresSafeArea()
             VStack{
-                HeaderView(title: $title,selectedTab: $selectedTab, isVisible: $isVisible).padding(.top)
+                HeaderView(title: $title,selectedTab: $selectedTab, isVisible: $isVisible)
                 
                 NavigationStack{
                     ZStack{

@@ -1,0 +1,21 @@
+{
+  "images" : [
+    {
+      "filename" : "Three-Statistics-That-Will-Make-You-Rethink-Your-Professional-Profile-Picture.jpg",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

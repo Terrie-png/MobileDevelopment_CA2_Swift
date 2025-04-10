@@ -22,6 +22,12 @@ struct SwipeableCardsView: View {
         
         func updateTopCardSwipeDirection(_ direction: CardView.SwipeDirection) {
             if !unswipedCards.isEmpty {
+                if(direction == CardView.SwipeDirection.right){
+                    print("Yes")
+                } else{
+                    print("No")
+                }
+                
                 unswipedCards[0].swipeDirection = direction
             }
         }
@@ -61,7 +67,7 @@ struct SwipeableCardsView: View {
                         CardView(
                             model: card,
                             size: geometry.size,
-                            dragOffset: .zero,
+                            dragOffset: dragState,
                             isTopCard: isTop,
                             isSecondCard: isSecond
                         )
@@ -96,7 +102,6 @@ struct SwipeableCardsView: View {
                         .animation(.easeInOut, value: dragState)
                     }
                 }
-                .padding()
             }
         }
     }
