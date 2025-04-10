@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct Mobile_Development_CA2App: App {
+
     var body: some Scene {
         WindowGroup {
             CompiledMainPageView()
+            
         }
     }
 }

@@ -87,7 +87,7 @@ struct CardView: View {
             }) {
                 Text("See details")
                     .font(.system(size: 18, weight: .bold))
-                    .foregroundColor(Color.primary    )
+                    .foregroundColor(Color.primaryColor)
                     .padding(.horizontal, 25)
                     .padding(.vertical, 12)
                     .background(Color.black.opacity(0.9))
@@ -101,7 +101,6 @@ struct CardView: View {
         .shadow(color: isTopCard ? getShadowColor() : (isSecondCard && dragOffset.width != 0 ? Color.gray.opacity(0.2) : Color.clear), radius: 10, x: 0, y: 3)
         .padding(.horizontal, 20)
     }
-
     // Badge Component
     private func badgeView(icon: String, text: String) -> some View {
         HStack {
