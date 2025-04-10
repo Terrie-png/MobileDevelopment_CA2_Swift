@@ -16,6 +16,7 @@ class EmployeesController{
     
     func AddEmployee (employee : CardView.Model) {
         EmployeesIntrested.append(employee)
+        print(EmployeesIntrested)
     }
     
     func RemoveEmployee(employeeID: CardView.Model.ID ){

@@ -22,6 +22,12 @@ struct SwipeableCardsView: View {
         
         func updateTopCardSwipeDirection(_ direction: CardView.SwipeDirection) {
             if !unswipedCards.isEmpty {
+                if(direction == CardView.SwipeDirection.right){
+                    print("Yes")
+                } else{
+                    print("No")
+                }
+                
                 unswipedCards[0].swipeDirection = direction
             }
         }
