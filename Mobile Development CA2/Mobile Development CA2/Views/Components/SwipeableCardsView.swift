@@ -96,7 +96,6 @@ struct SwipeableCardsView: View {
                         .animation(.easeInOut, value: dragState)
                     }
                 }
-                .padding()
             }
         }
     }

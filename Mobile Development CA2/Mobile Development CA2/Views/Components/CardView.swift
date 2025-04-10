@@ -39,8 +39,14 @@ struct CardView: View {
                         .scaledToFill()
                         .frame(width: 50, height: 50)
                         .clipShape(Circle())
+                } else{
+                    Image.ProfilePicture// Replace with actual asset name
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 50, height: 50)
+                        .clipShape(Circle())
                 }
-                
+
                 Spacer()
                 
                 HStack(spacing: 15) {
@@ -57,30 +63,45 @@ struct CardView: View {
                 }
             }
             
-            // Name
             Text(model.name)
                 .font(.system(size: 24, weight: .bold))
             
+            Spacer()
             // Rating & Info Badges
-            VStack(spacing: 8) {
-                badgeView(icon: "star.fill", text: model.rating)
-                badgeView(icon: "mappin.and.ellipse", text: model.location)
-                badgeView(icon: "clock.fill", text: model.experience)
-                badgeView(icon: "briefcase.fill", text: model.jobType )
+            VStack(alignment: .leading,spacing: 8) {
+                
+                HStack {
+                    badgeView(icon: "star.fill", text: model.rating)
+                    badgeView(icon: "mappin.and.ellipse", text: model.location)
+                }
+                HStack {
+                    badgeView(icon: "clock.fill", text: model.experience)
+                    badgeView(icon: "briefcase.fill", text: model.jobType )
+                }
             }
-            
+            Spacer()
             // Job Title
             Text(model.jobTitle)
                 .foregroundColor(.gray)
                 .font(.system(size: 16, weight: .medium))
-            
+            Spacer()
             // Seniority & Salary
-            Text(model.jobType)
-                .font(.system(size: 22, weight: .bold))
+            HStack {
+                Text("Job Type: ")
+                    .font(.system(size: 20, weight: .bold))
+                Text(model.jobType)
+                    .font(.system(size: 20, weight: .bold))
+            }
             
-            Text(model.salary)
-                .font(.system(size: 20, weight: .bold))
-                .foregroundColor(.black)
+            Spacer()
+            HStack {
+                Text("Salary: ").font(.system(size: 20, weight: .bold))
+                    .foregroundColor(.black)
+                Text(model.salary)
+                    .font(.system(size: 20, weight: .bold))
+                    .foregroundColor(.black)
+            }
+            Spacer()
             
             // See Details Button
             Button(action: {
@@ -95,7 +116,6 @@ struct CardView: View {
                     .background(Color.black.opacity(0.9))
                     .clipShape(Capsule())
             }
-            .padding(.top, 5)
             .sheet(isPresented: $showModal) {
                 VStack {
                     HStack{
@@ -115,7 +135,6 @@ struct CardView: View {
                     TextField("Type your message here", text: $message)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding()
-                    
                     Button("Close") {
                         // Close the modal
                         showModal = false
@@ -124,13 +143,14 @@ struct CardView: View {
                 }
             }
         
-            .padding(.top, 5)
+            	
         }
-        .padding(20)
+        .frame(width: UIScreen.main.bounds.width * 0.6, height: UIScreen.main.bounds.height * 0.5)
+        .padding(40)
+        .padding(.vertical,10)
         .background(Color.primaryColor)
         .cornerRadius(30)
         .shadow(color: isTopCard ? getShadowColor() : (isSecondCard && dragOffset.width != 0 ? Color.gray.opacity(0.2) : Color.clear), radius: 10, x: 0, y: 3)
-        .padding(.horizontal, 20)
     }
     // Badge Component
     private func badgeView(icon: String, text: String) -> some View {
