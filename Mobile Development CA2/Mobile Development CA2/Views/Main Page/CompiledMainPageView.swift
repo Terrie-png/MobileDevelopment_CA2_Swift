@@ -6,11 +6,12 @@
 //
 
 import SwiftUI
-
+import CoreLocation
 struct CompiledMainPageView: View {
     @State private var selectedTab = 0
     @State private var title = "Search Jobs"
     @State private var isVisible = true
+    @State  var  selectedLocation: CLLocationCoordinate2D?
     var body : some View{
         ZStack{
             
@@ -23,9 +24,10 @@ struct CompiledMainPageView: View {
                         switch selectedTab {
                         case 0:
                             
-                            CardStackView().onAppear{
+                            CardStackView(selectedLocation :$selectedLocation).onAppear{
                                 title = "Search Jobs"
                                 isVisible = true
+                                
                             }
                             
                         case 1:
@@ -54,12 +56,12 @@ struct CompiledMainPageView: View {
                                 isVisible = true
                             }
                         case 3:
-                            ProfileView().onAppear{
+                            ProfileView(selectedLocation :$selectedLocation).onAppear{
                                 title = "Profile"
                                 isVisible = true
                             }
                         default:
-                            CardStackView().onAppear{
+                            CardStackView(selectedLocation :$selectedLocation).onAppear{
                                 title = "Search Jobs"
                                 isVisible = true
                             }

@@ -3,13 +3,14 @@ import MapKit
 
 struct MapLocationPicker: View {
     @State private var position: MapCameraPosition = .automatic
-    @State private var selectedLocation: CLLocationCoordinate2D?
+    @Binding var selectedLocation: CLLocationCoordinate2D?
     @State private var searchText = ""
     @State private var showSearchResults = false
     @State private var mapSelection: MKMapItem?
     @State private var lookAroundScene: MKLookAroundScene?
     @State private var isConfirming = false
     @Binding var selectedLocationName: String
+
     @Environment(\.colorScheme) private var colorScheme
     
     @Environment(\.dismiss) private var dismiss
@@ -42,35 +43,57 @@ struct MapLocationPicker: View {
                 
                 // Search Bar
                 VStack {
-                    HStack {
-                        Image(systemName: "magnifyingglass")
-                            .foregroundColor(.gray)
+                   
+               
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .font(.title2)
+                                .foregroundColor(.gray)
+                                .padding()
+                                
+                        }
                         
-                        TextField("Search location", text: $searchText)
-                            .textFieldStyle(.plain)
-                            .autocorrectionDisabled()
-                            .onSubmit {
-                                Task {
-                                    await searchLocations()
-                                    showSearchResults = true
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                 
+                        HStack {
+                            
+                            Image(systemName: "magnifyingglass")
+                                .foregroundColor(.gray)
+                            
+                            TextField("Search location", text: $searchText)
+                                .textFieldStyle(.plain)
+                                .frame(maxWidth: .infinity)
+                                .autocorrectionDisabled()
+                                .onSubmit {
+                                    Task {
+                                        await searchLocations()
+                                        showSearchResults = true
+                                    }
+                                }
+                            
+                            if !searchText.isEmpty {
+                                Button {
+                                    searchText = ""
+                                    showSearchResults = false
+                                } label: {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .foregroundColor(.gray)
                                 }
                             }
-                        
-                        if !searchText.isEmpty {
-                            Button {
-                                searchText = ""
-                                showSearchResults = false
-                            } label: {
-                                Image(systemName: "xmark.circle.fill")
-                                    .foregroundColor(.gray)
-                            }
                         }
-                    }
-                    .padding(12)
-                    .background(colorScheme == .dark ? Color(.systemGray5) : Color(.systemBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .shadow(radius: 5)
-                    .padding()
+                        .padding(12)
+                        
+                        
+                        .background(colorScheme == .dark ? Color(.systemGray5) : Color(.systemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .shadow(radius: 5)
+                        .padding()
+                        
+                        
+                    
                     
                     Spacer()
                     
@@ -91,20 +114,14 @@ struct MapLocationPicker: View {
                         position: $position,
                         showSearchResults: $showSearchResults,
                         selectedLocationName: $selectedLocationName
+                        
                     )
                     .background(colorScheme == .dark ? Color(.systemGray6) : Color(.systemBackground))
                 }
             }
-            .overlay(alignment: .topTrailing) {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.title2)
-                        .foregroundColor(.gray)
-                        .padding()
-                }
-            }
+            
+                
+
             .confirmationDialog("Confirm Location", isPresented: $isConfirming) {
                 Button("Confirm") {
                     if let mapSelection {
@@ -221,6 +238,7 @@ struct LocationPreviewCard: View {
 struct LocationSettingsView: View {
     @State private var currentLocation = "Select Location"
     @State private var showMapPicker = false
+    @Binding  var  selectedLocation: CLLocationCoordinate2D?
     
     var body: some View {
         NavigationStack {
@@ -262,7 +280,7 @@ struct LocationSettingsView: View {
             .padding(.top)
         
             .sheet(isPresented: $showMapPicker) {
-                MapLocationPicker(selectedLocationName: $currentLocation)
+                MapLocationPicker(selectedLocation: $selectedLocation,selectedLocationName: $currentLocation  )
                     .edgesIgnoringSafeArea(.bottom)
             }
         }
@@ -272,6 +290,6 @@ struct LocationSettingsView: View {
 // Preview
 struct LocationSettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        LocationSettingsView()
+        LocationSettingsView(selectedLocation: .constant(nil) 	)
     }
 }

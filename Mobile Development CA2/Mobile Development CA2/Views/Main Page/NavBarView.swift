@@ -7,6 +7,7 @@ struct NavBarView: View {
     let deactiveColor = Color.quaternary
     @Binding var selectedTab: Int
     @Binding var isVisible: Bool
+   
     var body: some View {
         if(isVisible){
 

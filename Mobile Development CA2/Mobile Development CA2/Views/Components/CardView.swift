@@ -1,5 +1,5 @@
 import SwiftUI
-
+import CoreLocation
 struct CardView: View {
     enum SwipeDirection {
         case left, right, none
@@ -13,11 +13,26 @@ struct CardView: View {
                 var name: String
                 var rating: String
                 var location: String
+                let coordinates: CLLocationCoordinate2D
                 var experience: String
                 var jobType: String
                 var jobTitle: String
                 var seniority: String
                 var salary: String
+        static func == (lhs: Self, rhs: Self) -> Bool {
+                    return lhs.id == rhs.id &&
+                           lhs.profileImage == rhs.profileImage &&
+                           lhs.name == rhs.name &&
+                           lhs.rating == rhs.rating &&
+                           lhs.location == rhs.location &&
+                           lhs.coordinates.latitude == rhs.coordinates.latitude &&
+                           lhs.coordinates.longitude == rhs.coordinates.longitude &&
+                           lhs.experience == rhs.experience &&
+                           lhs.jobType == rhs.jobType &&
+                           lhs.jobTitle == rhs.jobTitle &&
+                           lhs.seniority == rhs.seniority &&
+                           lhs.salary == rhs.salary
+                }
     }
 
     var model: Model

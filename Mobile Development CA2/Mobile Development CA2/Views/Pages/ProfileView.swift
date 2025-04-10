@@ -1,7 +1,8 @@
 
 import SwiftUI
-
+import CoreLocation
 struct ProfileView: View {
+    @Binding var  selectedLocation: CLLocationCoordinate2D?
     var body: some View {
         ZStack{
             Color.secondaryColor.ignoresSafeArea()
@@ -20,7 +21,7 @@ struct ProfileView: View {
     //                }
 
                     Divider().background(Color.secondaryColor)
-                    NavigationLink(destination:LocationSettingsView()){
+                    NavigationLink(destination:LocationSettingsView(selectedLocation: $selectedLocation )){
                         HStack{
                             Image(systemName: "gearshape")
                             Text("Settings")
@@ -62,6 +63,6 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfileView()
+    ProfileView(selectedLocation: .constant(nil) )
 }
 
