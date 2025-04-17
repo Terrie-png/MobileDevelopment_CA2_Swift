@@ -6,13 +6,16 @@
 //
 
 import SwiftUI
+import SwiftData
+
 
 @main
 struct Mobile_Development_CA2App: App {
 
+
     var body: some Scene {
         WindowGroup {
-            CompiledMainPageView()
+            CompiledMainPageView().modelContainer(for: [Employee.self,InterestedEmployee.self])
             
         }
     }
