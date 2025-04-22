@@ -7,6 +7,11 @@ struct CardStackView: View {
     var controller: EmployeeController = EmployeeController.shared
     var interestedController: InterestedEmployeeController = InterestedEmployeeController.shared
     @State private var employees: [Employee] = []
+    @Binding  var selectedJobTypes: Set<String>
+    @Binding  var selectedLocations: Set<String>
+    @Binding  var selectedSeniorities: Set<String>
+    @Binding  var selectedJobTitles: Set<String>
+    
     
     var body: some View {
         VStack {
