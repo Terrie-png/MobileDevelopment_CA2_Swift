@@ -7,6 +7,7 @@ struct RegistrationView: View {
     @State private var errorMessage: String = ""
     @State private var registered: Bool = false
     
+    @Environment(\.modelContext) var modelContext
     var body: some View {
         NavigationStack{
             VStack {
@@ -97,7 +98,7 @@ struct RegistrationView: View {
         print("User registered as \(userType): Username: \(username)")
 
         // Simulate a registration attempt
-        registered = AuthController.shared.register(username: username, password: password)
+        registered = AuthController.shared.register(username: username, password: password, userType:"Employer" , modelContext: modelContext)
         
         // If registration fails, show an error message
         if !registered {
