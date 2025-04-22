@@ -201,15 +201,15 @@ struct FilterSectionView: View {
 
 // MARK: - Preview
 
-#Preview {
-    struct PreviewWrapper: View {
-        @State var title = "Search Jobs"
-        @State var selectedTab = 0
-        @State var isVisible = true
-        
-        var body: some View {
-            HeaderView(title: $title, selectedTab: $selectedTab, isVisible: $isVisible)
-        }
-    }
-    return PreviewWrapper()
-}
+//#Preview {
+//    struct PreviewWrapper: View {
+//        @State var title = "Search Jobs"
+//        @State var selectedTab = 0
+//        @State var isVisible = true
+//        
+//        var body: some View {
+//            HeaderView(title: $title, selectedTab: $selectedTab, isVisible: $isVisible)
+//        }
+//    }
+//    return PreviewWrapper()
+//}

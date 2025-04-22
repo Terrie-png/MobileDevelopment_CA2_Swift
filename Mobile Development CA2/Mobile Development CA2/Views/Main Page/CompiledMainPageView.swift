@@ -77,7 +77,10 @@ struct CompiledMainPageView: View {
                                 isVisible = true
                             }
                         default:
-                            CardStackView().onAppear{
+                            CardStackView(selectedJobTypes: $selectedJobTypes,
+                                          selectedLocations: $selectedLocations,
+                                          selectedSeniorities: $selectedSeniorities,
+                                          selectedJobTitles: $selectedJobTitles).onAppear{
                                 title = "Search Jobs"
                                 isVisible = true
                             }
