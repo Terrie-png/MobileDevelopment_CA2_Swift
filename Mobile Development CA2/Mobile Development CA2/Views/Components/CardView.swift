@@ -1,12 +1,12 @@
 import SwiftUI
-
+import SwiftData
 struct CardView: View {
     enum SwipeDirection {
         case left, right, none
     }
 
     struct Model: Identifiable, Equatable {
-        let id = UUID()
+        var id : UUID
         
         var swipeDirection: SwipeDirection = .none
         var profileImage: String // Image name
@@ -19,7 +19,6 @@ struct CardView: View {
                 var seniority: String
                 var salary: String
     }
-
     var model: Model
     var size: CGSize
     var dragOffset: CGSize
@@ -151,6 +150,7 @@ struct CardView: View {
         .background(Color.primaryColor)
         .cornerRadius(30)
         .shadow(color: isTopCard ? getShadowColor() : (isSecondCard && dragOffset.width != 0 ? Color.gray.opacity(0.2) : Color.clear), radius: 10, x: 0, y: 3)
+        
     }
     // Badge Component
     private func badgeView(icon: String, text: String) -> some View {
