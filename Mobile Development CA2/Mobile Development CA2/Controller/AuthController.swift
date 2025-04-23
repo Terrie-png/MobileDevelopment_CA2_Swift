@@ -52,8 +52,23 @@ class AuthController {
     func isLoggedIn() -> Bool {
         return UserDefaults.standard.string(forKey: Self.loggedInKey) != nil
     }
-
+    
     func getLoggedInUsername() -> String? {
         return UserDefaults.standard.string(forKey: Self.loggedInKey)
+    }
+    
+    @MainActor
+    func getUserModel(modelContext : ModelContext) -> UserModel?{
+        guard let username = getLoggedInUsername() else{return nil}
+        
+        let descriptor = FetchDescriptor<UserModel>(predicate: #Predicate { $0.username == username })
+        
+        do {
+            return try modelContext.fetch(descriptor).first
+        } catch {
+            print("Error fetching employees: \(error.localizedDescription)")
+            return nil
+        }
+
     }
 }

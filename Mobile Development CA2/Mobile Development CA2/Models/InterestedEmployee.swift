@@ -6,6 +6,7 @@ class InterestedEmployee {
     var id: UUID
     var status: ApplicationStatus
     var applicationDate: Date
+    
 
     init(
         id: UUID = UUID(),
