@@ -5,9 +5,7 @@ struct RegistrationView: View {
     @State private var password: String = ""
     @State private var userType: String = "Employee" // Default selection
     @State private var errorMessage: String = ""
-    @State private var registered: Bool = false
-    var authController: AuthController = AuthController.shared
-    @Environment(\.modelContext) var modelContext
+    
     var body: some View {
         NavigationStack{
             VStack {
@@ -42,6 +40,9 @@ struct RegistrationView: View {
                 }
                 .padding(.bottom, 20)
                 
+                
+                
+                
                 // Error message display
                 if !errorMessage.isEmpty {
                     Text(errorMessage)
@@ -52,6 +53,7 @@ struct RegistrationView: View {
                 // Register Button
                 Button(action: {
                     registerUser()
+                        
                 }) {
                     Text("Register")
                         .font(.headline)
@@ -62,11 +64,6 @@ struct RegistrationView: View {
                         .cornerRadius(10)
                         .padding(.horizontal)
                 }
-                .navigationDestination(isPresented: $registered) {
-                    LoginView()
-                }
-                
-                // Login Link
                 HStack {
                     Text("Already have an account?")
                         .font(.body)
@@ -79,10 +76,8 @@ struct RegistrationView: View {
             .padding()
             .navigationTitle("Registration")
             .navigationBarBackButtonHidden(true)
-            Spacer()
         }
     }
-
     // Function to handle user registration
     func registerUser() {
         // Simple validation: check if username and password are not empty
@@ -90,23 +85,17 @@ struct RegistrationView: View {
             errorMessage = "Username and password cannot be empty"
             return
         }
+
         
         // Reset error message on successful registration
         errorMessage = ""
         
-        // Simulate registration success or failure
+        // Display the selected user type and company name if applicable
         print("User registered as \(userType): Username: \(username)")
 
-        // Simulate a registration attempt
-        registered = authController.register(username: username, password: password, userType:"Employer" , modelContext: modelContext)
-        
-        // If registration fails, show an error message
-        if !registered {
-            errorMessage = "Registration failed. Please try again."
-        }
+        // Proceed with registration (e.g., save to a database or API call)
     }
 }
-
 
 #Preview {
     RegistrationView()

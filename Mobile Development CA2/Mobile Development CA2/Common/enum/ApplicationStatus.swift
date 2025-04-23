@@ -1,17 +1,18 @@
+//
+//  ApplicationStatus.swift
+//  Mobile Development CA2
+//
+//  Created by Student on 28/03/2025.
+//
+
 import Foundation
 import SwiftUI
 
-enum ApplicationStatus: String, Codable, Hashable, CaseIterable, Identifiable {
+enum ApplicationStatus: String, Hashable {
     case applied = "Applied"
     case interviewed = "Interviewed"
     case offered = "Offer Received"
     case rejected = "Rejected"
-    
-    var id: String { rawValue }
-    
-    var label: String {
-        rawValue
-    }
     
     var statusColor: Color {
         switch self {

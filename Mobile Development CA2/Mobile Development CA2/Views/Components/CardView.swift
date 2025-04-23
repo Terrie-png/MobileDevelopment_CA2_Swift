@@ -1,12 +1,12 @@
 import SwiftUI
-import SwiftData
+
 struct CardView: View {
     enum SwipeDirection {
         case left, right, none
     }
 
     struct Model: Identifiable, Equatable {
-        var id : UUID
+        let id = UUID()
         
         var swipeDirection: SwipeDirection = .none
         var profileImage: String // Image name
@@ -19,13 +19,13 @@ struct CardView: View {
                 var seniority: String
                 var salary: String
     }
+
     var model: Model
     var size: CGSize
     var dragOffset: CGSize
     var isTopCard: Bool
     var isSecondCard: Bool
-    @State var showModal = false
-    @State var message = ""
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             
@@ -38,14 +38,8 @@ struct CardView: View {
                         .scaledToFill()
                         .frame(width: 50, height: 50)
                         .clipShape(Circle())
-                } else{
-                    Image.ProfilePicture// Replace with actual asset name
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 50, height: 50)
-                        .clipShape(Circle())
                 }
-
+                
                 Spacer()
                 
                 HStack(spacing: 15) {
@@ -53,59 +47,43 @@ struct CardView: View {
                         // Like action
                     }) {
                         
-                        
-                        Image(systemName: "heart.fill")
-                            .foregroundColor(.black)
-                            .font(.system(size: 22))
+                            
+                            Image(systemName: "heart.fill")
+                                .foregroundColor(.black)
+                                .font(.system(size: 22))
                     }
                     
                 }
             }
-            
+
+            // Name
             Text(model.name)
                 .font(.system(size: 24, weight: .bold))
-            
-            Spacer()
+
             // Rating & Info Badges
-            VStack(alignment: .leading,spacing: 8) {
-                
-                HStack {
-                    badgeView(icon: "star.fill", text: model.rating)
-                    badgeView(icon: "mappin.and.ellipse", text: model.location)
-                }
-                HStack {
-                    badgeView(icon: "clock.fill", text: model.experience)
-                    badgeView(icon: "briefcase.fill", text: model.jobType )
-                }
+        VStack(spacing: 8) {
+                badgeView(icon: "star.fill", text: model.rating)
+                badgeView(icon: "mappin.and.ellipse", text: model.location)
+                badgeView(icon: "clock.fill", text: model.experience)
+                badgeView(icon: "briefcase.fill", text: model.jobType )
             }
-            Spacer()
+
             // Job Title
             Text(model.jobTitle)
                 .foregroundColor(.gray)
                 .font(.system(size: 16, weight: .medium))
-            Spacer()
+
             // Seniority & Salary
-            HStack {
-                Text("Job Type: ")
-                    .font(.system(size: 20, weight: .bold))
-                Text(model.jobType)
-                    .font(.system(size: 20, weight: .bold))
-            }
-            
-            Spacer()
-            HStack {
-                Text("Salary: ").font(.system(size: 20, weight: .bold))
-                    .foregroundColor(.black)
-                Text(model.salary)
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(.black)
-            }
-            Spacer()
-            
+            Text(model.jobType)
+                .font(.system(size: 22, weight: .bold))
+
+            Text(model.salary)
+                .font(.system(size: 20, weight: .bold))
+                .foregroundColor(.black)
+
             // See Details Button
             Button(action: {
-                // Show modal when button is pressed
-                showModal.toggle()
+                // Navigate or show details
             }) {
                 Text("See details")
                     .font(.system(size: 18, weight: .bold))
@@ -115,42 +93,13 @@ struct CardView: View {
                     .background(Color.black.opacity(0.9))
                     .clipShape(Capsule())
             }
-            .sheet(isPresented: $showModal) {
-                VStack {
-                    HStack{
-                        Image.ProfilePicture// Replace with actual asset name
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 50, height: 50)
-                            .clipShape(Circle())
-                        Text(model.name)
-                            .font(.system(size: 24, weight: .bold))
-                        
-                    }
-                    Text("Enter your message:")
-                        .font(.title2)
-                        .padding()
-                    
-                    TextField("Type your message here", text: $message)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding()
-                    Button("Close") {
-                        // Close the modal
-                        showModal = false
-                    }
-                    .padding()
-                }
-            }
-        
-            	
+            .padding(.top, 5)
         }
-        .frame(width: UIScreen.main.bounds.width * 0.6, height: UIScreen.main.bounds.height * 0.5)
-        .padding(40)
-        .padding(.vertical,10)
+        .padding(20)
         .background(Color.primaryColor)
         .cornerRadius(30)
         .shadow(color: isTopCard ? getShadowColor() : (isSecondCard && dragOffset.width != 0 ? Color.gray.opacity(0.2) : Color.clear), radius: 10, x: 0, y: 3)
-        
+        .padding(.horizontal, 20)
     }
     // Badge Component
     private func badgeView(icon: String, text: String) -> some View {

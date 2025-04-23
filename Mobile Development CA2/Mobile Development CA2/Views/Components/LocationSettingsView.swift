@@ -14,8 +14,6 @@ struct MapLocationPicker: View {
     
     @Environment(\.dismiss) private var dismiss
     
-    @Environment(\.modelContext) private var model
-    var controller : AuthController = AuthController.shared
     var body: some View {
             ZStack(alignment: .bottom) {
                 // Main Map View
@@ -28,7 +26,7 @@ struct MapLocationPicker: View {
                     UserAnnotation()
                 }
                 .mapControls {
-//                    MapUserLocationButton()
+                    MapUserLocationButton()
                     MapCompass()
                     MapScaleView()
                 }
@@ -51,7 +49,6 @@ struct MapLocationPicker: View {
                         TextField("Search location", text: $searchText)
                             .textFieldStyle(.plain)
                             .autocorrectionDisabled()
-                    
                             .onSubmit {
                                 Task {
                                     await searchLocations()
@@ -79,7 +76,6 @@ struct MapLocationPicker: View {
                     
                     // Location Preview Card
                     if let selectedLocation, let lookAroundScene {
-
                         LocationPreviewCard(scene: lookAroundScene) {
                             isConfirming = true
                         }
@@ -111,32 +107,9 @@ struct MapLocationPicker: View {
             }
             .confirmationDialog("Confirm Location", isPresented: $isConfirming) {
                 Button("Confirm") {
-                    guard let userModel: UserModel = controller.getUserModel(modelContext: model) else {
-                        // handle the “no user” case here:
-                        // you might return from the function, throw, or show an error
-                        print("Getting usermodel going error")
-                        return
-                    }
-                    if let selectedLocation{
-                        print(selectedLocation.latitude)
-                        print(selectedLocation.longitude)
-                        
-                        userModel.geoLatitude = selectedLocation.latitude
-                        userModel.geoLongitude = selectedLocation.longitude
-                        
-                        
-                    }
                     if let mapSelection {
                         selectedLocationName = mapSelection.name ?? "Selected Location"
-                        userModel.location = selectedLocationName
                         dismiss()
-                    }
-                    do{
-                        
-                        try model.save()
-                    } catch{
-                        print("Unable to save model")
-                        return
                     }
                 }
                 Button("Cancel", role: .cancel) {}
@@ -145,15 +118,12 @@ struct MapLocationPicker: View {
     
     private func searchLocations() async {
         let request = MKLocalSearch.Request()
-         
         request.naturalLanguageQuery = searchText
-        request.resultTypes = .address
-    
+        request.resultTypes = .pointOfInterest
         
         do {
             let search = MKLocalSearch(request: request)
             let response = try await search.start()
-            
             SearchResultsView.searchResults = response.mapItems
         } catch {
             print("Search error: \(error.localizedDescription)")
@@ -251,7 +221,7 @@ struct LocationPreviewCard: View {
 struct LocationSettingsView: View {
     @State private var currentLocation = "Select Location"
     @State private var showMapPicker = false
-    @Environment(\.modelContext) private var context
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
@@ -264,8 +234,6 @@ struct LocationSettingsView: View {
                         Text("Current Location")
                             .font(.subheadline)
                             .foregroundColor(.gray)
-
-
                         Text(currentLocation)
                             .font(.title3.bold())
                     }
@@ -297,18 +265,7 @@ struct LocationSettingsView: View {
                 MapLocationPicker(selectedLocationName: $currentLocation)
                     .edgesIgnoringSafeArea(.bottom)
             }
-        }.onAppear(){
-            loadUserLocation()
         }
-    }
-    
-    func loadUserLocation(){
-        guard let userModel = AuthController.shared.getUserModel(modelContext: context) else {
-            print("No user model found")
-            return
-        }
-        
-        currentLocation = userModel.location ?? "Select Location"
     }
 }
 

@@ -6,10 +6,6 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		3F6728AF2DAFC3420064F910 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 3F6728AE2DAFC3420064F910 /* GRDB */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXContainerItemProxy section */
 		3FD66A6F2D82E29D00BE4AE4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -56,7 +52,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3F6728AF2DAFC3420064F910 /* GRDB in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,7 +112,6 @@
 			);
 			name = "Mobile Development CA2";
 			packageProductDependencies = (
-				3F6728AE2DAFC3420064F910 /* GRDB */,
 			);
 			productName = "Mobile Development CA2";
 			productReference = 3FD66A5E2D82E29B00BE4AE4 /* Mobile Development CA2.app */;
@@ -201,9 +195,6 @@
 			);
 			mainGroup = 3FD66A552D82E29B00BE4AE4;
 			minimizedProjectReferenceProxies = 1;
-			packageReferences = (
-				3F6728AD2DAFC3420064F910 /* XCRemoteSwiftPackageReference "GRDB.swift" */,
-			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3FD66A5F2D82E29B00BE4AE4 /* Products */;
 			projectDirPath = "";
@@ -408,7 +399,6 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Mobile-Development-CA2-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = LinkUp;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -423,7 +413,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -438,7 +428,6 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Mobile-Development-CA2-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = LinkUp;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -453,7 +442,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -565,25 +554,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		3F6728AD2DAFC3420064F910 /* XCRemoteSwiftPackageReference "GRDB.swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/groue/GRDB.swift.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		3F6728AE2DAFC3420064F910 /* GRDB */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3F6728AD2DAFC3420064F910 /* XCRemoteSwiftPackageReference "GRDB.swift" */;
-			productName = GRDB;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3FD66A562D82E29B00BE4AE4 /* Project object */;
 }

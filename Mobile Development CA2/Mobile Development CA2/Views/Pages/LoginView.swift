@@ -5,8 +5,6 @@ struct LoginView: View {
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var isLoggedIn: Bool = false
-    var authController : AuthController = AuthController.shared
-    @Environment(\.modelContext) private var modelContext
     var body: some View {
         NavigationStack{
             VStack {
@@ -36,11 +34,7 @@ struct LoginView: View {
                 Button("Login") {
                     print("Login button tapped!")
                     isLoggedIn = true
-                    guard
-                            authController.login(username: username, password: password, modelContext: modelContext)else{
-                        print("login failed")
-                        return
-                    }
+                    UserDefaults.standard.set("login user", forKey: "testing")
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
@@ -48,6 +42,9 @@ struct LoginView: View {
                 .foregroundColor(.white)
                 .cornerRadius(10)
                 .padding(.horizontal)
+                .navigationDestination(isPresented: $isLoggedIn){
+                    CompiledMainPageView()
+                }
                 HStack {
                     Text("Don't have an account?")
                         .font(.body)
@@ -95,7 +92,6 @@ struct LoginView: View {
             .padding()
             .navigationTitle("Login")
             .navigationBarBackButtonHidden(true)
-            Spacer()
         }
         
         
