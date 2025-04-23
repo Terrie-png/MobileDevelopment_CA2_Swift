@@ -9,45 +9,18 @@ struct User: Identifiable {
     let time: String?
 }
 
-// New Detail View
-//struct ChatDetailView: View {
-//    let user: User
-//
-//    var body: some View {
-//        VStack(spacing: 20) {
-//            // Profile Image
-//            if user.profileImage.hasPrefix("system:") {
-//                Image(systemName: String(user.profileImage.dropFirst(7)))
-//                    .resizable()
-//                    .scaledToFit()
-//                    .frame(width: 100, height: 100)
-//                    .foregroundColor(.blue)
-//            } else {
-//                Image(user.profileImage)
-//                    .resizable()
-//                    .scaledToFill()
-//                    .frame(width: 100, height: 100)
-//                    .clipShape(Circle())
-//            }
-//
-//            Text(user.name)
-//                .font(.title)
-//                .bold()
-//
-//            // Add more user details here
-//            // For example:
-//            // Text("Last active: \(user.time ?? "Unknown")")
-//
-//            Spacer()
-//        }
-//        .padding()
-//        .navigationTitle("Chat with \(user.name)")
-//    }
-//}
 
-// Updated ChatView with navigation
+
 struct ChatView: View {
+    @Environment(\.modelContext) var modelContext
+    var controller = ChatMessageController.shared
+    var employeeController = EmployeeController.shared
+    var inrestedEmployee = InterestedEmployeeController.shared
+    @State private var interestedEmployees: [InterestedEmployee] = []
     var users: [User]
+    @State private var isLoading = false
+    @State private var errorMessage: String?
+  
     @Binding var isVisible:Bool
     var body: some View {
 
@@ -106,6 +79,38 @@ struct ChatView: View {
         
         
     }
+    private func fetchInterestedEmployees() async {
+            isLoading = true
+            errorMessage = nil
+            
+            do {
+               
+                let allEmployees = employeeController.getAllEmployees(context: modelContext) ?? []
+                let interestedEmployees = inrestedEmployee.getAllInterestedEmployees(context: modelContext) ?? []
+                let employeeDict = Dictionary(uniqueKeysWithValues: allEmployees.map { ($0.id, $0)})
+                var datajobApplications: [JobApplication] = interestedEmployees.compactMap { interest in
+                    // Find matching employee by ID
+                   
+                    guard let employee = employeeDict[interest.id] else { return nil }
+                    
+                    return JobApplication(
+                        profileImage: employee.profileImage,
+                        name: employee.name,
+                        rating: employee.rating,
+                        location: employee.location,
+                        experience: employee.experience,
+                        jobType: employee.jobType,
+                        jobTitle: employee.jobTitle,
+                        seniority: employee.seniority,
+                        salary: employee.salary,
+                        status: interest.status,
+                        applicationDate: interest.applicationDate
+                    )
+                }
+            }
+            
+            isLoading = false
+        }
 }
 
 

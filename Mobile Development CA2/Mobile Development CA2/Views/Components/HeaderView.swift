@@ -9,10 +9,12 @@ struct HeaderView: View {
     @Binding  var selectedLocations: Set<String>
     @Binding  var selectedSeniorities: Set<String>
     @Binding  var selectedJobTitles: Set<String>
+   
   
     
     
     var body: some View {
+        
         if isVisible {
             ZStack {
                 HStack {
@@ -42,13 +44,20 @@ struct HeaderView: View {
                                 selectedLocations: $selectedLocations,
                                 selectedSeniorities: $selectedSeniorities,
                                 selectedJobTitles: $selectedJobTitles
+                              
                                )
                     .presentationDetents([.medium, .large])
                     .presentationDragIndicator(.visible)
             }
         }
+        
     }
-    
+    private var hasActiveFilters: Bool {
+            !selectedJobTypes.isEmpty ||
+            !selectedLocations.isEmpty ||
+            !selectedSeniorities.isEmpty ||
+            !selectedJobTitles.isEmpty
+        }
     // MARK: - Subviews
     
     private var filterButton: some View {
@@ -61,7 +70,7 @@ struct HeaderView: View {
             }
             .foregroundColor(.black)
             .padding(12)
-            .background(Color.white)
+            .background(hasActiveFilters ? Color.blue : Color.white)
             .clipShape(Capsule())
             .shadow(radius: 2)
         }
@@ -81,6 +90,8 @@ struct HeaderView: View {
                 .shadow(radius: 2)
         }
     }
+    
+   
 }
 
 // MARK: - Filter Modal View
@@ -91,7 +102,7 @@ struct FilterModalView: View {
     @Binding  var selectedLocations: Set<String>
     @Binding  var selectedSeniorities: Set<String>
     @Binding  var selectedJobTitles: Set<String>
-    
+ 
     
     
     let jobTypes = ["Full-time", "Part-time", "Contract", "Freelance", "Intern"]
@@ -128,14 +139,18 @@ struct FilterModalView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button("Remove") {
+                       
+                        
                         isPresented = false
+                     
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Apply") {
                         // Apply filters here
                         isPresented = false
+                     
                     }
                     .fontWeight(.bold)
                 }
