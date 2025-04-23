@@ -6,7 +6,7 @@ struct RegistrationView: View {
     @State private var userType: String = "Employee" // Default selection
     @State private var errorMessage: String = ""
     @State private var registered: Bool = false
-    
+    var authController: AuthController = AuthController.shared
     @Environment(\.modelContext) var modelContext
     var body: some View {
         NavigationStack{
@@ -98,7 +98,7 @@ struct RegistrationView: View {
         print("User registered as \(userType): Username: \(username)")
 
         // Simulate a registration attempt
-        registered = AuthController.shared.register(username: username, password: password, userType:"Employer" , modelContext: modelContext)
+        registered = authController.register(username: username, password: password, userType:"Employer" , modelContext: modelContext)
         
         // If registration fails, show an error message
         if !registered {

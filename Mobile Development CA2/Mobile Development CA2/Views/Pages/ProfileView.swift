@@ -29,15 +29,15 @@ struct ProfileView: View {
                         Divider()
                     NavigationLink(destination:test()){
                         HStack{
-                            Image(systemName: "accessibility")
-                            Text("Accessibility")
+                            Image(systemName: "person.crop.circle")
+                            Text("Profile")
                         }
                     }
                         Divider()
                     Spacer()
                         HStack(spacing: 15) {
                             Button(action: {
-                                // Withdraw Application
+                                AuthController.shared.logout()
                             }) {
                                 Text("Log Out")
                                     .frame(maxWidth: .infinity)

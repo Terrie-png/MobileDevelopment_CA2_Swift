@@ -28,7 +28,7 @@ class AuthController {
     }
 
     @MainActor
-    func register(username: String, password: String, userType: String, modelContext: ModelContext, geoLatitude: Double? = nil, geoLongitude: Double? = nil) -> Bool {
+    func register(username: String, password: String, userType: String, modelContext: ModelContext, geoLatitude: Double? = nil, geoLongitude: Double? = nil, location: String? = nil) -> Bool {
         if KeychainHelper.shared.read(service: service, account: username) != nil {
             return false
         }
@@ -36,7 +36,7 @@ class AuthController {
         guard let passwordData = password.data(using: .utf8) else { return false }
         KeychainHelper.shared.save(passwordData, service: service, account: username)
 
-        let newUser = UserModel(username: username, password: password, userType: userType, geoLatitude: geoLatitude, geoLongitude: geoLongitude)
+        let newUser = UserModel(username: username, password: password, userType: userType, geoLatitude: geoLatitude, geoLongitude: geoLongitude, location: location)
         modelContext.insert(newUser)
 
         // Optionally log in user immediately
@@ -52,8 +52,23 @@ class AuthController {
     func isLoggedIn() -> Bool {
         return UserDefaults.standard.string(forKey: Self.loggedInKey) != nil
     }
-
+    
     func getLoggedInUsername() -> String? {
         return UserDefaults.standard.string(forKey: Self.loggedInKey)
+    }
+    
+    @MainActor
+    func getUserModel(modelContext : ModelContext) -> UserModel?{
+        guard let username = getLoggedInUsername() else{return nil}
+        
+        let descriptor = FetchDescriptor<UserModel>(predicate: #Predicate { $0.username == username })
+        
+        do {
+            return try modelContext.fetch(descriptor).first
+        } catch {
+            print("Error fetching employees: \(error.localizedDescription)")
+            return nil
+        }
+
     }
 }
