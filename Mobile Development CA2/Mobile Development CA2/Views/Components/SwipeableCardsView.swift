@@ -22,6 +22,11 @@ struct SwipeableCardsView: View {
         
         func updateTopCardSwipeDirection(_ direction: CardView.SwipeDirection) {
             if !unswipedCards.isEmpty {
+                if direction == .right {
+                    print("Yes")
+                } else {
+                    print("No")
+                }
                 unswipedCards[0].swipeDirection = direction
             }
         }
@@ -35,7 +40,8 @@ struct SwipeableCardsView: View {
     @ObservedObject var model: Model
     @State private var dragState = CGSize.zero
     @State private var cardRotation: Double = 0
-    
+    @Environment(\.modelContext) var modelContext
+    let employeeInterestedController = InterestedEmployeeController.shared
     private let swipeThreshold: CGFloat = 100.0
     private let rotationFactor: Double = 35.0
     
@@ -52,7 +58,7 @@ struct SwipeableCardsView: View {
             } else {
                 ZStack {
                     Color.secondaryColor
-                                    .ignoresSafeArea(.all)
+                        .ignoresSafeArea(.all)
                     
                     ForEach(model.unswipedCards.reversed()) { card in
                         let isTop = card == model.unswipedCards.first
@@ -61,7 +67,7 @@ struct SwipeableCardsView: View {
                         CardView(
                             model: card,
                             size: geometry.size,
-                            dragOffset: .zero,
+                            dragOffset: dragState,
                             isTopCard: isTop,
                             isSecondCard: isSecond
                         )
@@ -76,14 +82,26 @@ struct SwipeableCardsView: View {
                                 .onEnded { _ in
                                     if abs(self.dragState.width) > swipeThreshold {
                                         let swipeDirection: CardView.SwipeDirection = self.dragState.width > 0 ? .right : .left
+                                        
+                                        // Capture card ID before removal
+                                        let swipedCardID = model.unswipedCards.first?.id
+                                        
                                         model.updateTopCardSwipeDirection(swipeDirection)
                                         
                                         withAnimation(.easeOut(duration: 0.5)) {
                                             self.dragState.width = self.dragState.width > 0 ? 1000 : -1000
                                         }
+                                        
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                                             self.model.removeTopCard()
                                             self.dragState = .zero
+                                            
+                                            if swipeDirection == .right, let id = swipedCardID {
+                                                let data = InterestedEmployee(id: id, status: .offered, applicationDate: Date())
+                                                modelContext.insert(data)
+                                            }
+                                            
+                                            
                                         }
                                     } else {
                                         withAnimation(.spring()) {
@@ -96,7 +114,6 @@ struct SwipeableCardsView: View {
                         .animation(.easeInOut, value: dragState)
                     }
                 }
-                .padding()
             }
         }
     }

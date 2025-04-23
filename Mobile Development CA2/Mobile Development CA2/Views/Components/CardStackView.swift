@@ -1,80 +1,78 @@
-//
-//  CardStackView.swift
-//  Mobile Development CA2
-//
-//  Created by Student on 20/03/2025.
-//
-
 import SwiftUI
+import SwiftData
 
 struct CardStackView: View {
+    
+    @Environment(\.modelContext) var modelContext
+    var controller: EmployeeController = EmployeeController.shared
+    var interestedController: InterestedEmployeeController = InterestedEmployeeController.shared
+    @State private var employees: [Employee] = []
+    
     var body: some View {
-        
-        ZStack {
-            Color.secondaryColor
-                .ignoresSafeArea(.all)
-        
-            VStack {
-                let cards = [
-                    CardView.Model( profileImage: "", // Replace with actual asset name
-                                    name: "Chelsea Knight",
-                                    rating: "4.8",
-                                    location: "New York",
-                                    experience: "3+ year",
-                                    jobType: "Full-time",
-                                    jobTitle: "Hardware Engineer",
-                                    seniority: "Senior",
-                                    salary: "$2400 / month"),
-                    CardView.Model( profileImage: "", // Replace with actual asset name
-                                    name: "Chelsea Knight",
-                                    rating: "4.8",
-                                    location: "New York",
-                                    experience: "3+ year",
-                                    jobType: "Full-time",
-                                    jobTitle: "Hardware Engineer",
-                                    seniority: "Senior",
-                                    salary: "$2400 / month"),
-                    CardView.Model( profileImage: "", // Replace with actual asset name
-                                    name: "Chelsea Knight",
-                                    rating: "4.8",
-                                    location: "New York",
-                                    experience: "3+ year",
-                                    jobType: "Full-time",
-                                    jobTitle: "Hardware Engineer",
-                                    seniority: "Senior",
-                                    salary: "$2400 / month"),
-                    CardView.Model( profileImage: "", // Replace with actual asset name
-                                    name: "Chelsea Knight",
-                                    rating: "4.8",
-                                    location: "New York",
-                                    experience: "3+ year",
-                                    jobType: "Full-time",
-                                    jobTitle: "Hardware Engineer",
-                                    seniority: "Senior",
-                                    salary: "$2400 / month"),
-                    CardView.Model( profileImage: "", // Replace with actual asset name
-                                    name: "Chelsea Knight",
-                                    rating: "4.8",
-                                    location: "New York",
-                                    experience: "3+ year",
-                                    jobType: "Full-time",
-                                    jobTitle: "Hardware Engineer",
-                                    seniority: "Senior",
-                                    salary: "$2400 / month")
-                ]
+        VStack {
+            if !employees.isEmpty {
+                let cards = employees.map { employee in
+                    CardView.Model(
+                        id: employee.id,
+                        profileImage: employee.profileImage,
+                        name: employee.name,
+                        rating: employee.rating,
+                        location: employee.location,
+                        experience: employee.experience,
+                        jobType: employee.jobType,
+                        jobTitle: employee.jobTitle,
+                        seniority: employee.seniority,
+                        salary: employee.salary
+                    )
+                }
                 
                 let model = SwipeableCardsView.Model(cards: cards)
+                
                 SwipeableCardsView(model: model) { model in
                     print(model.swipedCards)
                     model.reset()
                 }
+            } else {
+                Text("Loading employees...")
+                    .padding()
             }
+        }
+        .onAppear {
+            loadEmployees()
+        }
+    }
+    
+    private func loadEmployees() {
+        let fetched = controller.getAllEmployees(context: modelContext)
+        let interested = interestedController.getAllInterestedEmployees(context: modelContext)
+        
+        if let fetched = fetched, !fetched.isEmpty {
+            // Build a set of all interested employee IDs
+            let interestedIDs = Set(interested?.map { $0.id } ?? [])
             
+            // Filter out employees whose IDs are already in interestedIDs
+            let notInterestedEmployees = fetched.filter { !interestedIDs.contains($0.id) }
             
-            .padding()
+            employees = notInterestedEmployees // Assign filtered employees
+        } else {
+            insertSampleEmployees()
+            employees = controller.getAllEmployees(context: modelContext) ?? []
+        }
+    }
+
+    
+    private func insertSampleEmployees() {
+        for employee in EmployeeSamples {
+            modelContext.insert(employee)
+        }
+        do {
+            try modelContext.save()
+        } catch {
+            print("Error inserting sample employees: \(error.localizedDescription)")
         }
     }
 }
+
 #Preview {
     CardStackView()
 }
