@@ -2,22 +2,32 @@ import Foundation
 import SwiftData
 
 @Model
-class UserModel {
+class UserModel: Identifiable {
+    var id: UUID
     
     var username: String
-    var password: String
     var userType: String
     var geoLatitude: Double?
     var geoLongitude: Double?
     var location: String?
-    // Initialize the UserModel
-    init(username: String, password: String, userType: String, geoLatitude: Double? = nil, geoLongitude: Double? = nil, location: String? = nil) {
-        self.username = username
-        self.password = password
-        self.userType = userType
-        self.geoLatitude = geoLatitude
-        self.geoLongitude = geoLongitude
-        self.location = location
-    }
     
+    /// Store the Apple credential.user
+    @Attribute(.unique) var appleUserId: String?
+
+    init(
+      username:     String,
+      userType:     String,
+      appleUserId:  String?    = nil,
+      geoLatitude:  Double?    = nil,
+      geoLongitude: Double?    = nil,
+      location:     String?    = nil
+    ) {
+        self.id = UUID()
+        self.username     = username
+        self.userType     = userType
+        self.appleUserId  = appleUserId
+        self.geoLatitude  = geoLatitude
+        self.geoLongitude = geoLongitude
+        self.location     = location
+    }
 }
