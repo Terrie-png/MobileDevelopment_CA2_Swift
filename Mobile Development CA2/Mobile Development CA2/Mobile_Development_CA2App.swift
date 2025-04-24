@@ -16,10 +16,10 @@ struct Mobile_Development_CA2App: App {
     var authController = AuthController.shared
     var body: some Scene {
         WindowGroup {
-            if(authController.isLoggedIn()){
+            if(isloggedIn){
                 CompiledMainPageView().modelContainer(for: [Employee.self,InterestedEmployee.self, UserModel.self])
             } else{
-                LoginView().modelContainer(for: UserModel.self)
+                LoginView(isLoggedIn: $isloggedIn).modelContainer(for: UserModel.self)
             }
         }
     }

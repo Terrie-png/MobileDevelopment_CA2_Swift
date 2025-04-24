@@ -54,7 +54,7 @@ struct CompiledMainPageView: View {
                                 isVisible = true
                             }
                         case 3:
-                            ProfileView().onAppear{
+                            ProfileView(isVisible: $isVisible).onAppear{
                                 title = "Profile"
                                 isVisible = true
                             }

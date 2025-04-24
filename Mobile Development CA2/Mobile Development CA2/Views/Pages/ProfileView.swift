@@ -2,6 +2,8 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @Binding var isVisible : Bool
+    
     var body: some View {
         ZStack{
             Color.secondaryColor.ignoresSafeArea()
@@ -20,10 +22,10 @@ struct ProfileView: View {
     //                }
 
                     Divider().background(Color.secondaryColor)
-                    NavigationLink(destination:LocationSettingsView()){
+                    NavigationLink(destination:LocationSettingsView(isVisible: $isVisible)){
                         HStack{
-                            Image(systemName: "gearshape")
-                            Text("Settings")
+                            Image(systemName: "location.circle.fill").foregroundColor(Color.blue)
+                            Text("Location")
                         }
                     }
                         Divider()
@@ -60,8 +62,3 @@ struct ProfileView: View {
         }
     }
 }
-
-#Preview {
-    ProfileView()
-}
-

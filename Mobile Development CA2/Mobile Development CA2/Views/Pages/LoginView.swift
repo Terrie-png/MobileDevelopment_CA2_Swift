@@ -4,7 +4,7 @@ import AuthenticationServices
 struct LoginView: View {
     @State private var username: String = ""
     @State private var password: String = ""
-    @State private var isLoggedIn: Bool = false
+    @Binding var isLoggedIn: Bool
     var authController : AuthController = AuthController.shared
     @Environment(\.modelContext) private var modelContext
     var body: some View {
@@ -35,12 +35,12 @@ struct LoginView: View {
                 // Login Button
                 Button("Login") {
                     print("Login button tapped!")
-                    isLoggedIn = true
-                    guard
-                            authController.login(username: username, password: password, modelContext: modelContext)else{
-                        print("login failed")
+                    guard authController.login(username: username, password: password, modelContext: modelContext) else {
+                        isLoggedIn = false
                         return
                     }
+
+                    isLoggedIn = true
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
@@ -51,7 +51,7 @@ struct LoginView: View {
                 HStack {
                     Text("Don't have an account?")
                         .font(.body)
-                    NavigationLink("Sign Up", destination: RegistrationView())  // Navigate to Sign Up view
+                    NavigationLink("Sign Up", destination: RegistrationView(isLoggedIn: $isLoggedIn))  // Navigate to Sign Up view
                         .font(.body)
                         .foregroundColor(.blue)
                         .underline()
@@ -141,6 +141,3 @@ struct LandingPage: View{
         }
 }
     
-#Preview {
-    LoginView()
-}

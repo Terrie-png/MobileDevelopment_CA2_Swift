@@ -23,7 +23,6 @@ class AuthController {
             UserDefaults.standard.set(username, forKey: Self.loggedInKey)
             return true
         }
-
         return false
     }
 

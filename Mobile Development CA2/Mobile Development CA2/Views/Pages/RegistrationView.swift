@@ -6,6 +6,7 @@ struct RegistrationView: View {
     @State private var userType: String = "Employee" // Default selection
     @State private var errorMessage: String = ""
     @State private var registered: Bool = false
+    @Binding var isLoggedIn: Bool
     var authController: AuthController = AuthController.shared
     @Environment(\.modelContext) var modelContext
     var body: some View {
@@ -63,14 +64,14 @@ struct RegistrationView: View {
                         .padding(.horizontal)
                 }
                 .navigationDestination(isPresented: $registered) {
-                    LoginView()
+                    LoginView(isLoggedIn: $isLoggedIn)
                 }
                 
                 // Login Link
                 HStack {
                     Text("Already have an account?")
                         .font(.body)
-                    NavigationLink("Log in", destination: LoginView())
+                    NavigationLink("Log in", destination: LoginView(isLoggedIn: $isLoggedIn))
                         .font(.body)
                         .foregroundColor(.blue)
                 }
@@ -105,9 +106,4 @@ struct RegistrationView: View {
             errorMessage = "Registration failed. Please try again."
         }
     }
-}
-
-
-#Preview {
-    RegistrationView()
 }

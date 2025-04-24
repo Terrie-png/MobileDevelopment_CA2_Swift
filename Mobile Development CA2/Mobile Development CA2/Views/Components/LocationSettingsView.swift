@@ -251,54 +251,60 @@ struct LocationPreviewCard: View {
 struct LocationSettingsView: View {
     @State private var currentLocation = "Select Location"
     @State private var showMapPicker = false
+    @Binding var isVisible: Bool
     @Environment(\.modelContext) private var context
     var body: some View {
         NavigationStack {
-            VStack(spacing: 20) {
-                // Current Location Display
-                HStack {
-                    Image(systemName: "location.fill")
-                        .foregroundColor(.blue)
-                    
-                    VStack(alignment: .leading) {
-                        Text("Current Location")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
+            ZStack{
+                Color.secondaryColor.ignoresSafeArea()
+                VStack(spacing: 20) {
+                    // Current Location Display
+                    HStack {
+                        Image(systemName: "location.fill")
+                            .foregroundColor(.blue)
+                        
+                        VStack(alignment: .leading) {
+                            Text("Current Location")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
 
 
-                        Text(currentLocation)
-                            .font(.title3.bold())
+                            Text(currentLocation)
+                                .font(.title3.bold())
+                        }
+                        
+                        Spacer()
+                        
+                        Button {
+                            showMapPicker = true
+                        } label: {
+                            Text("Change")
+                                .foregroundColor(.blue)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
+                                .background(Color.blue.opacity(0.1))
+                                .clipShape(Capsule())
+                        }
                     }
+                    .padding()
+                    .background(Color(.systemBackground))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+                    .padding(.horizontal)
                     
                     Spacer()
-                    
-                    Button {
-                        showMapPicker = true
-                    } label: {
-                        Text("Change")
-                            .foregroundColor(.blue)
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
-                            .background(Color.blue.opacity(0.1))
-                            .clipShape(Capsule())
-                    }
                 }
-                .padding()
-                .background(Color(.systemBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
-                .padding(.horizontal)
-                
-                Spacer()
+                .padding(.top)
+            
+                .sheet(isPresented: $showMapPicker) {
+                    MapLocationPicker(selectedLocationName: $currentLocation)
+                        .edgesIgnoringSafeArea(.bottom)
+                }
+            }.onAppear(){
+                loadUserLocation()
+                isVisible = false
             }
-            .padding(.top)
-        
-            .sheet(isPresented: $showMapPicker) {
-                MapLocationPicker(selectedLocationName: $currentLocation)
-                    .edgesIgnoringSafeArea(.bottom)
-            }
-        }.onAppear(){
-            loadUserLocation()
+            
         }
     }
     
@@ -312,9 +318,3 @@ struct LocationSettingsView: View {
     }
 }
 
-// Preview
-struct LocationSettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        LocationSettingsView()
-    }
-}
