@@ -13,7 +13,7 @@ struct ProfileView: View {
             VStack {
                 // Header background
                 Color.primary
-                    .frame(height: 200)
+                    .frame(height: 150)
                     
 
                 // Profile Image
