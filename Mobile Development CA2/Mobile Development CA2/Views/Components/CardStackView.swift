@@ -6,6 +6,7 @@ struct CardStackView: View {
     @Environment(\.modelContext) var modelContext
     var controller: EmployeeController = EmployeeController.shared
     var interestedController: InterestedEmployeeController = InterestedEmployeeController.shared
+    var authController: AuthController = AuthController.shared
     @State private var employees: [Employee] = []
     
     var body: some View {
@@ -50,7 +51,12 @@ struct CardStackView: View {
         }
 
         // Build a set of all interested employee IDs
-        let interested = interestedController.getAllInterestedEmployees(context: modelContext)
+        
+            guard let ownerId = authController.getLoggedInID() else{
+                print("User Not logged In!!")
+                return
+            }
+        let interested = interestedController.getAllInterestedEmployees(context: modelContext, ownerId: ownerId)
         let interestedIDs = Set(interested?.compactMap { $0.id } ?? [])
 
         employees = fetched.filter { employee in

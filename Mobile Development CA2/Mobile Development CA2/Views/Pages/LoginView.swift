@@ -51,7 +51,17 @@ struct LoginView: View {
                             .foregroundColor(.gray)
                     }
 
-                    SignInWithAppleButton(.signIn, onRequest: { _ in }, onCompletion: handleAppleSignIn)
+                    SignInWithAppleButton(.signIn) { request in
+                      request.requestedScopes = [.fullName, .email]
+                    } onCompletion: { result in
+                      switch result {
+                      case .success(let auth):
+                        handle(appleAuth: auth)
+                      case .failure(let err):
+                        loginError = "Apple sign-in failed: \(err.localizedDescription)"
+                        isLoggedIn = false
+                      }
+                    }
                         .signInWithAppleButtonStyle(.black)
                         .frame(height: 45)
                         .cornerRadius(12)
@@ -83,15 +93,22 @@ struct LoginView: View {
         isLoggedIn = true
         loginError = ""
     }
-
-    func handleAppleSignIn(result: Result<ASAuthorization, Error>) {
-        switch result {
-        case .success(let authResults):
-            print("Apple login succeeded: \(authResults)")
-            isLoggedIn = true
-        case .failure(let error):
-            print("Apple login failed: \(error)")
-            isLoggedIn = false
-        }
-    }
+    
+    private func handle(appleAuth: ASAuthorization) {
+       guard let cred = appleAuth.credential as? ASAuthorizationAppleIDCredential else {
+         loginError = "Invalid Apple credential."
+         isLoggedIn = false
+         return
+       }
+       // pass to your AuthController in a @MainActor Task:
+       Task { @MainActor in
+         AuthController.shared.handleAppleSignIn(
+           appleUserId: cred.user,
+           email:       cred.email,
+           fullName:    cred.fullName,
+           modelContext: modelContext
+         )
+         isLoggedIn = true
+       }
+     }
 }
