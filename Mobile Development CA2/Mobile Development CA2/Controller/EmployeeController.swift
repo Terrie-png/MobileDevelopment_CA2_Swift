@@ -38,6 +38,7 @@ class EmployeeController {
             if let employee = try context.fetch(fetchDescriptor).first {
                 employee.jobTitle = newJobTitle
                 employee.salary = newSalary
+                
                 try context.save()
                 return nil
             } else {

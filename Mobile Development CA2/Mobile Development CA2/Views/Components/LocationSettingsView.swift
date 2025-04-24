@@ -314,7 +314,9 @@ struct LocationSettingsView: View {
             return
         }
         
-        currentLocation = userModel.location ?? "Select Location"
+        if (userModel.location != ""){
+            currentLocation = userModel.location ?? currentLocation
+        }
     }
 }
 

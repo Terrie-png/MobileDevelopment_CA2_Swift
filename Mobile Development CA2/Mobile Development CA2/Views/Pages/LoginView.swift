@@ -4,6 +4,7 @@ import AuthenticationServices
 struct LoginView: View {
     @State private var username: String = ""
     @State private var password: String = ""
+    @State private var loginError: String = ""
     @Binding var isLoggedIn: Bool
     var authController : AuthController = AuthController.shared
     @Environment(\.modelContext) private var modelContext
@@ -31,16 +32,23 @@ struct LoginView: View {
                         .padding(.horizontal)
                 }
                 .padding(.bottom, 20)
-                
+                if !loginError.isEmpty {
+                    Text(loginError)
+                        .foregroundColor(.red)
+                        .font(.subheadline)
+                        .padding(.top, 5)
+                }
                 // Login Button
                 Button("Login") {
                     print("Login button tapped!")
                     guard authController.login(username: username, password: password, modelContext: modelContext) else {
                         isLoggedIn = false
+                        loginError = "Username or password is invalid. Please try again."
                         return
                     }
 
                     isLoggedIn = true
+                    loginError = ""
                 }
                 .frame(maxWidth: .infinity)
                 .padding()

@@ -96,7 +96,7 @@ struct RegistrationView: View {
         errorMessage = ""
         
         // Simulate registration success or failure
-        print("User registered as \(userType): Username: \(username)")
+        print("User registered as Employer : Username: \(username)")
 
         // Simulate a registration attempt
         registered = authController.register(username: username, password: password, userType:"Employer" , modelContext: modelContext)

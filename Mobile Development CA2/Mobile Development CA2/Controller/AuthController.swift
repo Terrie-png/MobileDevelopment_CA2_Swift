@@ -27,7 +27,7 @@ class AuthController {
     }
 
     @MainActor
-    func register(username: String, password: String, userType: String, modelContext: ModelContext, geoLatitude: Double? = nil, geoLongitude: Double? = nil, location: String? = nil) -> Bool {
+    func register(username: String, password: String, userType: String, modelContext: ModelContext, geoLatitude: Double? = nil, geoLongitude: Double? = nil, location: String? = "") -> Bool {
         if KeychainHelper.shared.read(service: service, account: username) != nil {
             return false
         }
@@ -37,7 +37,11 @@ class AuthController {
 
         let newUser = UserModel(username: username, password: password, userType: userType, geoLatitude: geoLatitude, geoLongitude: geoLongitude, location: location)
         modelContext.insert(newUser)
-
+        do{
+            try modelContext.save()
+        } catch {
+            print("Error inserting User: \(error.localizedDescription)")
+        }
         // Optionally log in user immediately
         UserDefaults.standard.set(username, forKey: Self.loggedInKey)
 
