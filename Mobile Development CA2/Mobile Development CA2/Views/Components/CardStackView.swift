@@ -113,21 +113,23 @@ struct CardStackView: View {
             // Filter out employees whose IDs are already in interestedIDs
             employees = fetched.filter { !interestedIDs.contains($0.id) }
         } else {
-            insertSampleEmployees()
+            controller.insertSampleEmployees(context: modelContext)
             employees = controller.getAllEmployees(context: modelContext) ?? []
             return
         }
+        
 
-        // Build a set of all interested employee IDs
-        let interested = interestedController.getAllInterestedEmployees(context: modelContext)
         let interestedIDs = Set(interested?.compactMap { $0.id } ?? [])
 
-        employees = fetched.filter { employee in
-            guard employee.id != nil else { return false }
-            return !interestedIDs.contains(employee.id)
-        }
+//        
+//        employees = fetched.filter { employee in
+//            guard employee.id != nil else { return false }
+//            return !interestedIDs.contains(employee.id)
         isLoading = false
     }
+     func applyFilters() {
+           // Filters are automatically applied through the filteredEmployees computed property
+       }
     
 
 }
