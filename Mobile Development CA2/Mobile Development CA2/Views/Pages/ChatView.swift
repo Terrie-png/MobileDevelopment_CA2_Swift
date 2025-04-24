@@ -13,13 +13,18 @@ struct User: Identifiable {
 
 struct ChatView: View {
     @Environment(\.modelContext) var modelContext
-    var controller = ChatMessageController.shared
+//    @StateObject private var chatController: ChatMessageController
+
+   
     var employeeController = EmployeeController.shared
     var inrestedEmployee = InterestedEmployeeController.shared
     @State private var interestedEmployees: [InterestedEmployee] = []
-    var users: [User]
+      var users: [User]
     @State private var isLoading = false
     @State private var errorMessage: String?
+//    init() {
+//        _chatController = StateObject(wrappedValue: ChatMessageController(modelContext: modelContext))
+//    }
   
     @Binding var isVisible:Bool
     var body: some View {
@@ -114,27 +119,27 @@ struct ChatView: View {
 }
 
 
-// Preview
-#Preview {
-
-    @Previewable @State var isVisible  = false
-
-    NavigationView{
-        ChatView(users: [
-            User(profileImage: "system:person.crop.circle.fill",
-                 name: "Alice",
-                 lastMessage: "Hey, how are you?",
-                 time: "10:30 AM"),
-            
-            User(profileImage: "system:person.crop.circle",
-                 name: "Bob",
-                 lastMessage: "Meeting at 3 PM",
-                 time: "Yesterday"),
-            
-            User(profileImage: "system:person.2.circle.fill",
-                 name: "Team Group",
-                 lastMessage: "Project update",
-                 time: "2 days ago")
-        ],isVisible: $isVisible)
-    }
-}
+//// Preview
+//#Preview {
+//
+//    @Previewable @State var isVisible  = false
+//
+//    NavigationView{
+////        ChatView(users: [
+////            User(profileImage: "system:person.crop.circle.fill",
+////                 name: "Alice",
+////                 lastMessage: "Hey, how are you?",
+////                 time: "10:30 AM"),
+////            
+////            User(profileImage: "system:person.crop.circle",
+////                 name: "Bob",
+////                 lastMessage: "Meeting at 3 PM",
+////                 time: "Yesterday"),
+////            
+////            User(profileImage: "system:person.2.circle.fill",
+////                 name: "Team Group",
+////                 lastMessage: "Project update",
+////                 time: "2 days ago")
+////        ],isVisible: $isVisible)
+//    }
+//}

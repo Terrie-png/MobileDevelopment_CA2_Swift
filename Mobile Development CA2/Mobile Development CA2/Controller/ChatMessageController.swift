@@ -1,130 +1,138 @@
-//
-//  ChatController.swift
-//  Mobile Development CA2
-//
-//  Created by Student on 23/04/2025.
-//
-
-import Foundation
 import SwiftData
+import SwiftUI
 
-@MainActor
 class ChatMessageController {
     static let shared = ChatMessageController()
-    private let modelContainer: ModelContainer
-    private let modelContext: ModelContext
     
-    @Published var messages: [ChatMessage] = []
+    private init() {}
     
-    init() {
-        do {
-            modelContainer = try ModelContainer(for: ChatMessage.self, Employee.self, InterestedEmployee.self)
-            modelContext = modelContainer.mainContext
-            fetchMessages()
-        } catch {
-            fatalError("Failed to initialize ChatMessageController: \(error)")
-        }
-    }
-    
-    // MARK: - CRUD Operations
-    
-    func createMessage(
-        content: String,
-        direction: MessageDirection,
-        employee: Employee? = nil,
-        interestedEmployee: InterestedEmployee? = nil
-    ) {
-        let newMessage = ChatMessage(
-            content: content,
-            direction: direction,
-            employee: employee,
-            interestedEmployee: interestedEmployee
-        )
-        modelContext.insert(newMessage)
-        saveContext()
-    }
-    
-    func fetchMessages(
-        forEmployee employee: Employee? = nil,
-        forApplication application: InterestedEmployee? = nil
-    ) {
-        let descriptor = FetchDescriptor<ChatMessage>(
-            predicate: buildPredicate(employee: employee, application: application),
+    // Fetch all messages
+    func getAllMessages(context: ModelContext) -> [ChatMesage]? {
+        let fetchDescriptor = FetchDescriptor<ChatMesage>(
             sortBy: [SortDescriptor(\.timestamp)]
         )
         
         do {
-            messages = try modelContext.fetch(descriptor)
+            return try context.fetch(fetchDescriptor)
         } catch {
-            print("Failed to fetch messages: \(error)")
-            messages = []
-        }
-    }
-    
-    func updateMessage(_ message: ChatMessage, newContent: String) {
-        message.content = newContent
-        saveContext()
-    }
-    
-    func markAsRead(_ message: ChatMessage) {
-        message.isRead = true
-        saveContext()
-    }
-    
-    func deleteMessage(_ message: ChatMessage) {
-        modelContext.delete(message)
-        saveContext()
-    }
-    
-    // MARK: - Relationship Management
-    
-    func fetchConversation(
-        between employee: Employee,
-        regarding application: InterestedEmployee
-    ) -> [ChatMessage] {
-        let descriptor = FetchDescriptor<ChatMessage>(
-            predicate: #Predicate {
-                $0.employee?.id == employee.id &&
-                $0.interestedEmployee?.id == application.id
-            },
-            sortBy: [SortDescriptor(\.timestamp)]
-        )
-        
-        do {
-            return try modelContext.fetch(descriptor)
-        } catch {
-            print("Failed to fetch conversation: \(error)")
-            return []
-        }
-    }
-    
-    // MARK: - Private Helpers
-    
-    private func buildPredicate(
-        employee: Employee?,
-        application: InterestedEmployee?
-    ) -> Predicate<ChatMessage>? {
-        switch (employee, application) {
-        case let (.some(emp), .some(app)):
-            return #Predicate {
-                $0.employee?.id == emp.id &&
-                $0.interestedEmployee?.id == app.id
-            }
-        case let (.some(emp), .none):
-            return #Predicate { $0.employee?.id == emp.id }
-        case let (.none, .some(app)):
-            return #Predicate { $0.interestedEmployee?.id == app.id }
-        case (.none, .none):
+            print("Error fetching messages: \(error.localizedDescription)")
             return nil
         }
     }
     
-    private func saveContext() {
+    // Fetch messages by user ID
+    func getMessagesByUser(userId: UUID, context: ModelContext) -> [ChatMesage]? {
+        let fetchDescriptor = FetchDescriptor<ChatMesage>(
+            predicate: #Predicate { $0.user == userId },
+            sortBy: [SortDescriptor(\.timestamp)]
+        )
+        
         do {
-            try modelContext.save()
-            fetchMessages() // Refresh the published messages
+            return try context.fetch(fetchDescriptor)
         } catch {
-            print("Failed to save context: \(error)")
+            print("Error fetching user messages: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
+    // Fetch messages by employee ID
+    func getMessagesByEmployee(employeeId: UUID, context: ModelContext) -> [ChatMesage]? {
+        let fetchDescriptor = FetchDescriptor<ChatMesage>(
+            predicate: #Predicate { $0.employee == employeeId },
+            sortBy: [SortDescriptor(\.timestamp)]
+        )
+        
+        do {
+            return try context.fetch(fetchDescriptor)
+        } catch {
+            print("Error fetching employee messages: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
+    // Get conversation between specific user and employee
+    func getConversation(userId: UUID, employeeId: UUID, context: ModelContext) -> [ChatMesage]? {
+        let fetchDescriptor = FetchDescriptor<ChatMesage>(
+            predicate: #Predicate { $0.user == userId && $0.employee == employeeId },
+            sortBy: [SortDescriptor(\.timestamp)]
+        )
+        
+        do {
+            return try context.fetch(fetchDescriptor)
+        } catch {
+            print("Error fetching conversation: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
+    // Add a new message from user
+    func sendUserMessage(userId: UUID, employeeId: UUID, messageText: String, context: ModelContext) -> String? {
+        do {
+            let message = ChatMesage(
+                id: UUID(),
+                user: userId,
+                employee: employeeId,
+                messaage: messageText
+            )
+            context.insert(message)
+            try context.save()
+            return nil
+        } catch {
+            return "Error sending message: \(error.localizedDescription)"
+        }
+    }
+    
+    // Add a new message from employee
+    func sendEmployeeMessage(userId: UUID, employeeId: UUID, messageText: String, context: ModelContext) -> String? {
+        do {
+            let message = ChatMesage(
+                id: UUID(),
+                user: userId,
+                employee: employeeId,
+                messaage: messageText
+            )
+            context.insert(message)
+            try context.save()
+            return nil
+        } catch {
+            return "Error sending message: \(error.localizedDescription)"
+        }
+    }
+    
+    // Delete a specific message
+    func deleteMessage(messageId: UUID, context: ModelContext) -> String? {
+        let fetchDescriptor = FetchDescriptor<ChatMesage>(
+            predicate: #Predicate { $0.id == messageId }
+        )
+        
+        do {
+            if let message = try context.fetch(fetchDescriptor).first {
+                context.delete(message)
+                try context.save()
+                return nil
+            } else {
+                return "Message not found!"
+            }
+        } catch {
+            return "Error deleting message: \(error.localizedDescription)"
+        }
+    }
+    
+    // Delete all messages in a conversation
+    func clearConversation(userId: UUID, employeeId: UUID, context: ModelContext) -> String? {
+        let fetchDescriptor = FetchDescriptor<ChatMesage>(
+            predicate: #Predicate { $0.user == userId && $0.employee == employeeId }
+        )
+        
+        do {
+            let messages = try context.fetch(fetchDescriptor)
+            for message in messages {
+                context.delete(message)
+            }
+            try context.save()
+            return nil
+        } catch {
+            return "Error clearing conversation: \(error.localizedDescription)"
         }
     }
 }

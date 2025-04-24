@@ -52,7 +52,8 @@ struct CompiledMainPageView: View {
                                 isVisible = true
                             }
                         case 2:
-                            ChatView(users: [
+                            ChatView(
+                                users: [
                                 User(profileImage: "system:person.crop.circle.fill",
                                      name: "Alice",
                                      lastMessage: "Hey, how are you?",
@@ -67,7 +68,8 @@ struct CompiledMainPageView: View {
                                      name: "Team Group",
                                      lastMessage: "Project update",
                                      time: "2 days ago")
-                            ],isVisible: $isVisible).onAppear{
+                            ]
+                                     ,isVisible: $isVisible).onAppear{
                                 title = "Chats"
                                 isVisible = true
                             }

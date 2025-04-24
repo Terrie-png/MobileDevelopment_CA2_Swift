@@ -1,40 +1,21 @@
 import Foundation
 import SwiftData
 
-enum MessageDirection {
-    case sent
-    case received
-}
-
 @Model
-class ChatMessage {
+class ChatMesage {
     var id: UUID
-    var content: String
-    var timestamp: Date
-    var direction: MessageDirection
-    var isRead: Bool
-    
-    // Relationship to Employee (the sender/receiver)
-    var employee: Employee?
-    
-    // Relationship to InterestedEmployee (the job application context)
-    var interestedEmployee: InterestedEmployee?
-    
-    init(
-        id: UUID = UUID(),
-        content: String,
-        timestamp: Date = Date(),
-        direction: MessageDirection,
-        isRead: Bool = false,
-        employee: Employee? = nil,
-        interestedEmployee: InterestedEmployee? = nil
-    ) {
-        self.id = id
-        self.content = content
+    var user: UUID
+    var employee: UUID
+    var messaage: String
+    var timestamp : Date
+
+    init(  id: UUID, user: UUID, employee: UUID,messaage: String, timestamp : Date = Date()) {
+        self.id = UUID()
+        self.user = UUID()
+        self.employee = UUID()
+        self.messaage = messaage
         self.timestamp = timestamp
-        self.direction = direction
-        self.isRead = isRead
-        self.employee = employee
-        self.interestedEmployee = interestedEmployee
+        
+        
     }
 }
