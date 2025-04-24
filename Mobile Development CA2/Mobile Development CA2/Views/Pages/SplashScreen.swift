@@ -8,9 +8,9 @@ struct SplashView: View {
     var body: some View {
         if isActive {
             if(isloggedIn){
-                CompiledMainPageView(isLoggedIn: $isloggedIn).modelContainer(for: [Employee.self,InterestedEmployee.self, UserModel.self])
+                CompiledMainPageView(isLoggedIn: $isloggedIn)
             } else{
-                LoginView(isLoggedIn: $isloggedIn).modelContainer(for: UserModel.self)
+                LoginView(isLoggedIn: $isloggedIn)
             }
         } else {
             ZStack {

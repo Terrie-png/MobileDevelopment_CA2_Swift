@@ -44,7 +44,7 @@ struct CardStackView: View {
     
     private func loadEmployees() {
         guard let fetched = controller.getAllEmployees(context: modelContext), !fetched.isEmpty else {
-            insertSampleEmployees()
+            controller.insertSampleEmployees(context: modelContext)
             employees = controller.getAllEmployees(context: modelContext) ?? []
             return
         }
@@ -60,28 +60,6 @@ struct CardStackView: View {
     }
 
     
-    private func insertSampleEmployees() {
-        for sample in EmployeeSamples {
-            let employee = Employee(
-                profileImage: sample.profileImage,
-                name: sample.name,
-                rating: sample.rating,
-                location: sample.location,
-                experience: sample.experience,
-                jobType: sample.jobType,
-                jobTitle: sample.jobTitle,
-                seniority: sample.seniority,
-                salary: sample.salary
-            )
-            modelContext.insert(employee)
-        }
-
-        do {
-            try modelContext.save()
-        } catch {
-            print("Error inserting sample employees: \(error.localizedDescription)")
-        }
-    }
 
 }
 

@@ -14,7 +14,7 @@ struct Mobile_Development_CA2App: App {
 
     var body: some Scene {
         WindowGroup {
-            SplashView()
+            SplashView().modelContainer(for: [Employee.self,InterestedEmployee.self, UserModel.self])
         }
     }
 }
