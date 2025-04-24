@@ -5,7 +5,6 @@ struct CardStackView: View {
     @Environment(\.modelContext) var modelContext
     var controller: EmployeeController = EmployeeController.shared
     var interestedController: InterestedEmployeeController = InterestedEmployeeController.shared
-    
     @State private var employees: [Employee] = []
     @State private var isLoading = true
     
@@ -116,24 +115,21 @@ struct CardStackView: View {
         } else {
             insertSampleEmployees()
             employees = controller.getAllEmployees(context: modelContext) ?? []
+            return
+        }
+
+        // Build a set of all interested employee IDs
+        let interested = interestedController.getAllInterestedEmployees(context: modelContext)
+        let interestedIDs = Set(interested?.compactMap { $0.id } ?? [])
+
+        employees = fetched.filter { employee in
+            guard employee.id != nil else { return false }
+            return !interestedIDs.contains(employee.id)
         }
         isLoading = false
     }
     
-    private func insertSampleEmployees() {
-        for employee in EmployeeSamples {
-            modelContext.insert(employee)
-        }
-        do {
-            try modelContext.save()
-        } catch {
-            print("Error inserting sample employees: \(error.localizedDescription)")
-        }
-    }
-    
-    private func applyFilters() {
-        // Filters are automatically applied through the filteredEmployees computed property
-    }
+
 }
 
 // Preview with sample bindings

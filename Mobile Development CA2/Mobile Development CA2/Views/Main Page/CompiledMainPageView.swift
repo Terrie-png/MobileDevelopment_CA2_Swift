@@ -17,6 +17,7 @@ struct CompiledMainPageView: View {
     @State private var selectedJobTitles: Set<String> = []
  
     
+    @Binding var isLoggedIn: Bool
     var body : some View{
         ZStack{
             
@@ -74,7 +75,7 @@ struct CompiledMainPageView: View {
                                 isVisible = true
                             }
                         case 3:
-                            ProfileView().onAppear{
+                            ProfileView(isVisible: $isVisible, isLoggedIn: $isLoggedIn).onAppear{
                                 title = "Profile"
                                 isVisible = true
                             }
@@ -98,8 +99,4 @@ struct CompiledMainPageView: View {
         }
     }
     
-}
-
-#Preview {
-    CompiledMainPageView()
 }

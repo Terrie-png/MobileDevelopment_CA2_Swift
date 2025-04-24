@@ -3,73 +3,7 @@ import SwiftUI
 // Applied Jobs View
 struct AppliedJobsView: View {
     // Updated sample job applications to match the new structure
-    @State var jobApplications: [JobApplication] = [
-        JobApplication(
-            profileImage: "", // Replace with actual asset name
-            name: "Chelsea Knight",
-            rating: "4.8",
-            location: "New York",
-            experience: "3+ year",
-            jobType: "Full-time",
-            jobTitle: "Hardware Engineer",
-            seniority: "Senior",
-            salary: "$2400 / month",
-            status: .applied,
-            applicationDate: Date().addingTimeInterval(-30 * 24 * 60 * 60)
-        ),
-        JobApplication(
-            profileImage: "", // Replace with actual asset name
-            name: "Chelsea Knight",
-            rating: "4.8",
-            location: "New York",
-            experience: "3+ year",
-            jobType: "Full-time",
-            jobTitle: "Hardware Engineer",
-            seniority: "Senior",
-            salary: "$2400 / month",
-            status: .interviewed,
-            applicationDate: Date().addingTimeInterval(-15 * 24 * 60 * 60)
-        ),
-        JobApplication(
-            profileImage: "", // Replace with actual asset name
-            name: "Chelsea Knight",
-            rating: "4.8",
-            location: "New York",
-            experience: "3+ year",
-            jobType: "Full-time",
-            jobTitle: "Hardware Engineer",
-            seniority: "Senior",
-            salary: "$2400 / month",
-            status: .offered,
-            applicationDate: Date().addingTimeInterval(-45 * 24 * 60 * 60)
-        ),
-        JobApplication(
-            profileImage: "", // Replace with actual asset name
-            name: "Chelsea Knight",
-            rating: "4.8",
-            location: "New York",
-            experience: "3+ year",
-            jobType: "Full-time",
-            jobTitle: "Hardware Engineer",
-            seniority: "Senior",
-            salary: "$2400 / month",
-            status: .applied,
-            applicationDate: Date().addingTimeInterval(-10 * 24 * 60 * 60)
-        ),
-        JobApplication(
-            profileImage: "", // Replace with actual asset name
-            name: "Jason Njoku",
-            rating: "5",
-            location: "New York",
-            experience: "3+ year",
-            jobType: "Full-time",
-            jobTitle: "Hardware Engineer",
-            seniority: "Senior",
-            salary: "$8400 / month",
-            status: .rejected,
-            applicationDate: Date().addingTimeInterval(-60 * 24 * 60 * 60)
-        )
-    ]
+    @State var jobApplications: [JobApplication] = []
     @Binding var isVisible : Bool
     
     @Environment(\.modelContext) var modelContext

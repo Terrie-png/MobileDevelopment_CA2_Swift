@@ -22,7 +22,7 @@ class UserController{
                 user.geoLatitude = latitude
                 user.geoLongitude = longitude
                 
-                try modelContext.save() // Save if needed, depending on your environment
+                try modelContext.save() 
                 print("User location updated.")
             } else {
                 print("User not found.")

@@ -12,15 +12,9 @@ import SwiftData
 @main
 struct Mobile_Development_CA2App: App {
 
-    @State var isloggedIn:Bool = false
-    var authController = AuthController.shared
     var body: some Scene {
         WindowGroup {
-            if(authController.isLoggedIn()){
-                CompiledMainPageView().modelContainer(for: [Employee.self,InterestedEmployee.self, UserModel.self])
-            } else{
-                LoginView().modelContainer(for: UserModel.self)
-            }
+            SplashView().modelContainer(for: [Employee.self,InterestedEmployee.self, UserModel.self])
         }
     }
 }
