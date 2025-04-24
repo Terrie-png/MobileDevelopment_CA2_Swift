@@ -38,6 +38,7 @@ class EmployeeController {
             if let employee = try context.fetch(fetchDescriptor).first {
                 employee.jobTitle = newJobTitle
                 employee.salary = newSalary
+                
                 try context.save()
                 return nil
             } else {
@@ -64,4 +65,29 @@ class EmployeeController {
             return "Error deleting employee: \(error.localizedDescription)"
         }
     }
+    
+    func insertSampleEmployees( context: ModelContext) {
+           // Make sure EmployeeSamples is an array of *data structs* or template objects,
+           // not already-inserted SwiftData entities.
+           for sample in EmployeeSamples {
+               let employee = Employee(
+                   profileImage: sample.profileImage,
+                   name:         sample.name,
+                   rating:       sample.rating,
+                   location:     sample.location,
+                   experience:   sample.experience,
+                   jobType:      sample.jobType,
+                   jobTitle:     sample.jobTitle,
+                   seniority:    sample.seniority,
+                   salary:       sample.salary
+               )
+               context.insert(employee)
+           }
+
+           do {
+               try context.save()
+           } catch {
+               print("Error inserting sample employees:", error.localizedDescription)
+           }
+       }
 }

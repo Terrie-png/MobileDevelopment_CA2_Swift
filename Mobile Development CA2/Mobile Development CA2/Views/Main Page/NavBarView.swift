@@ -92,7 +92,3 @@ struct MessagesView: View {
         Spacer()
     }
 }
-
-#Preview {
-    CompiledMainPageView()
-}

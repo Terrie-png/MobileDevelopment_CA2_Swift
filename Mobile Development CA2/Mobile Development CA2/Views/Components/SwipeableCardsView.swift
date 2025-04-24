@@ -100,7 +100,11 @@ struct SwipeableCardsView: View {
                                                 let data = InterestedEmployee(id: id, status: .offered, applicationDate: Date())
                                                 modelContext.insert(data)
                                             }
-                                            
+                                            do{
+                                            try modelContext.save()
+                                        } catch {
+                                            print("Error inserting sample employees: \(error.localizedDescription)")
+                                        }
                                             
                                         }
                                     } else {

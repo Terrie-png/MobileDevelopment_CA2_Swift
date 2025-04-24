@@ -43,34 +43,24 @@ struct CardStackView: View {
     }
     
     private func loadEmployees() {
-        let fetched = controller.getAllEmployees(context: modelContext)
-        let interested = interestedController.getAllInterestedEmployees(context: modelContext)
-        
-        if let fetched = fetched, !fetched.isEmpty {
-            // Build a set of all interested employee IDs
-            let interestedIDs = Set(interested?.map { $0.id } ?? [])
-            
-            // Filter out employees whose IDs are already in interestedIDs
-            let notInterestedEmployees = fetched.filter { !interestedIDs.contains($0.id) }
-            
-            employees = notInterestedEmployees // Assign filtered employees
-        } else {
-            insertSampleEmployees()
+        guard let fetched = controller.getAllEmployees(context: modelContext), !fetched.isEmpty else {
+            controller.insertSampleEmployees(context: modelContext)
             employees = controller.getAllEmployees(context: modelContext) ?? []
+            return
+        }
+
+        // Build a set of all interested employee IDs
+        let interested = interestedController.getAllInterestedEmployees(context: modelContext)
+        let interestedIDs = Set(interested?.compactMap { $0.id } ?? [])
+
+        employees = fetched.filter { employee in
+            guard employee.id != nil else { return false }
+            return !interestedIDs.contains(employee.id)
         }
     }
 
     
-    private func insertSampleEmployees() {
-        for employee in EmployeeSamples {
-            modelContext.insert(employee)
-        }
-        do {
-            try modelContext.save()
-        } catch {
-            print("Error inserting sample employees: \(error.localizedDescription)")
-        }
-    }
+
 }
 
 #Preview {
