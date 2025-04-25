@@ -11,22 +11,40 @@ struct CompiledMainPageView: View {
     @State private var selectedTab = 0
     @State private var title = "Search Jobs"
     @State private var isVisible = true
+    @State private var selectedJobTypes: Set<String> = []
+    @State private var selectedLocations: Set<String> = []
+    @State private var selectedSeniorities: Set<String> = []
+    @State private var selectedJobTitles: Set<String> = []
+ 
+    
     @Binding var isLoggedIn: Bool
     var body : some View{
         ZStack{
             
             Color.secondaryColor.ignoresSafeArea()
             VStack{
-                HeaderView(title: $title,selectedTab: $selectedTab, isVisible: $isVisible)
+                HeaderView(title: $title,selectedTab: $selectedTab, isVisible: $isVisible,
+                           selectedJobTypes: $selectedJobTypes,
+                           selectedLocations: $selectedLocations,
+                           selectedSeniorities: $selectedSeniorities,
+                           selectedJobTitles: $selectedJobTitles
+                           )
                 
                 NavigationStack{
                     ZStack{
                         switch selectedTab {
                         case 0:
                             
-                            CardStackView().onAppear{
+                            CardStackView( selectedJobTypes: $selectedJobTypes,
+                                           selectedLocations: $selectedLocations,
+                                           selectedSeniorities: $selectedSeniorities,
+                                           selectedJobTitles: $selectedJobTitles
+                                
+                            ).onAppear{
                                 title = "Search Jobs"
                                 isVisible = true
+                                
+                                
                             }
                             
                         case 1:
@@ -35,7 +53,8 @@ struct CompiledMainPageView: View {
                                 isVisible = true
                             }
                         case 2:
-                            ChatView(users: [
+                            ChatView(
+                                users: [
                                 User(profileImage: "system:person.crop.circle.fill",
                                      name: "Alice",
                                      lastMessage: "Hey, how are you?",
@@ -50,7 +69,8 @@ struct CompiledMainPageView: View {
                                      name: "Team Group",
                                      lastMessage: "Project update",
                                      time: "2 days ago")
-                            ],isVisible: $isVisible).onAppear{
+                            ]
+                                     ,isVisible: $isVisible).onAppear{
                                 title = "Chats"
                                 isVisible = true
                             }
@@ -60,7 +80,10 @@ struct CompiledMainPageView: View {
                                 isVisible = true
                             }
                         default:
-                            CardStackView().onAppear{
+                            CardStackView(selectedJobTypes: $selectedJobTypes,
+                                          selectedLocations: $selectedLocations,
+                                          selectedSeniorities: $selectedSeniorities,
+                                          selectedJobTitles: $selectedJobTitles).onAppear{
                                 title = "Search Jobs"
                                 isVisible = true
                             }

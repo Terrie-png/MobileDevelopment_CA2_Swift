@@ -127,6 +127,39 @@ struct CardView: View {
                             .font(.system(size: 24, weight: .bold))
                         
                     }
+                    Group {
+                        DetailRow(
+                            icon: "briefcase",
+                            title: "Job Type",
+                            value: model.jobType
+                        )
+                        
+                        DetailRow(
+                            icon: "star",
+                            title: "Seniority",
+                            value: model.seniority
+                        )
+                        
+                        DetailRow(
+                            icon: "location",
+                            title: "Location",
+                            value: model.location
+                        )
+                        
+                        DetailRow(
+                            icon: "clock",
+                            title: "Experience",
+                            value: model.experience
+                        )
+                        
+                        DetailRow(
+                            icon: "dollarsign.circle",
+                            title: "Salary",
+                            value: model.salary
+                        )
+                        
+                        
+                    }
                     Text("Enter your message:")
                         .font(.title2)
                         .padding()

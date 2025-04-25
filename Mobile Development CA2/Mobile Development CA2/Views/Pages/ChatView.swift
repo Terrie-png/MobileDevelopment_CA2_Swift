@@ -9,45 +9,23 @@ struct User: Identifiable {
     let time: String?
 }
 
-// New Detail View
-//struct ChatDetailView: View {
-//    let user: User
-//
-//    var body: some View {
-//        VStack(spacing: 20) {
-//            // Profile Image
-//            if user.profileImage.hasPrefix("system:") {
-//                Image(systemName: String(user.profileImage.dropFirst(7)))
-//                    .resizable()
-//                    .scaledToFit()
-//                    .frame(width: 100, height: 100)
-//                    .foregroundColor(.blue)
-//            } else {
-//                Image(user.profileImage)
-//                    .resizable()
-//                    .scaledToFill()
-//                    .frame(width: 100, height: 100)
-//                    .clipShape(Circle())
-//            }
-//
-//            Text(user.name)
-//                .font(.title)
-//                .bold()
-//
-//            // Add more user details here
-//            // For example:
-//            // Text("Last active: \(user.time ?? "Unknown")")
-//
-//            Spacer()
-//        }
-//        .padding()
-//        .navigationTitle("Chat with \(user.name)")
-//    }
-//}
 
-// Updated ChatView with navigation
+
 struct ChatView: View {
-    var users: [User]
+    @Environment(\.modelContext) var modelContext
+//    @StateObject private var chatController: ChatMessageController
+
+    var authController :AuthController = AuthController.shared
+    var employeeController = EmployeeController.shared
+    var inrestedEmployee = InterestedEmployeeController.shared
+    @State private var interestedEmployees: [InterestedEmployee] = []
+      var users: [User]
+    @State private var isLoading = false
+    @State private var errorMessage: String?
+//    init() {
+//        _chatController = StateObject(wrappedValue: ChatMessageController(modelContext: modelContext))
+//    }
+  
     @Binding var isVisible:Bool
     var body: some View {
 
@@ -106,30 +84,64 @@ struct ChatView: View {
         
         
     }
+//    private func fetchInterestedEmployees() async {
+//            isLoading = true
+//            errorMessage = nil
+//            
+//            do {
+//               
+//                let allEmployees = employeeController.getAllEmployees(context: modelContext) ?? []
+//                guard let ownerId = authController.getLoggedInID() else{return}
+//                let interestedEmployees = inrestedEmployee.getAllInterestedEmployees(context: modelContext, ownerId: ownerId) ?? []
+//                let employeeDict = Dictionary(uniqueKeysWithValues: allEmployees.map { ($0.id, $0)})
+//                var datajobApplications: [JobApplication] = interestedEmployees.compactMap { interest in
+//                    // Find matching employee by ID
+//                   
+//                    guard let employee = employeeDict[interest.id] else {print("something is wrong"); return }
+//                    
+//                    return JobApplication(
+//                        id: employee.id,
+//                        profileImage: employee.profileImage,
+//                        name: employee.name,
+//                        rating: employee.rating,
+//                        location: employee.location,
+//                        experience: employee.experience,
+//                        jobType: employee.jobType,
+//                        jobTitle: employee.jobTitle,
+//                        seniority: employee.seniority,
+//                        salary: employee.salary,
+//                        status: interest.status,
+//                        applicationDate: interest.applicationDate
+//                    )
+//                }
+//            }
+//            
+//            isLoading = false
+//        }
 }
 
 
-// Preview
-#Preview {
-
-    @Previewable @State var isVisible  = false
-
-    NavigationView{
-        ChatView(users: [
-            User(profileImage: "system:person.crop.circle.fill",
-                 name: "Alice",
-                 lastMessage: "Hey, how are you?",
-                 time: "10:30 AM"),
-            
-            User(profileImage: "system:person.crop.circle",
-                 name: "Bob",
-                 lastMessage: "Meeting at 3 PM",
-                 time: "Yesterday"),
-            
-            User(profileImage: "system:person.2.circle.fill",
-                 name: "Team Group",
-                 lastMessage: "Project update",
-                 time: "2 days ago")
-        ],isVisible: $isVisible)
-    }
-}
+//// Preview
+//#Preview {
+//
+//    @Previewable @State var isVisible  = false
+//
+//    NavigationView{
+////        ChatView(users: [
+////            User(profileImage: "system:person.crop.circle.fill",
+////                 name: "Alice",
+////                 lastMessage: "Hey, how are you?",
+////                 time: "10:30 AM"),
+////            
+////            User(profileImage: "system:person.crop.circle",
+////                 name: "Bob",
+////                 lastMessage: "Meeting at 3 PM",
+////                 time: "Yesterday"),
+////            
+////            User(profileImage: "system:person.2.circle.fill",
+////                 name: "Team Group",
+////                 lastMessage: "Project update",
+////                 time: "2 days ago")
+////        ],isVisible: $isVisible)
+//    }
+//}

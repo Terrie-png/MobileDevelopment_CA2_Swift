@@ -90,4 +90,24 @@ class EmployeeController {
                print("Error inserting sample employees:", error.localizedDescription)
            }
        }
+    // Helper extension to extract numeric value from salary string
+    
+    
+    func getUniqueEmployeeProperties(from employees: [Employee]) -> [String: Set<String>] {
+        func uniqueValues(for keyPath: KeyPath<Employee, String>) -> Set<String> {
+            return Set(employees.map { $0[keyPath: keyPath] })
+        }
+        
+        let uniqueSalaries = Set(employees.map { $0.salary })
+        
+        return [
+            "jobTypes": uniqueValues(for: \.jobType),
+            "jobTitles": uniqueValues(for: \.jobTitle),
+            "seniorities": uniqueValues(for: \.seniority),
+            "locations": uniqueValues(for: \.location),
+            "salaries": uniqueSalaries
+        ]
+    }
+    
+    
 }
