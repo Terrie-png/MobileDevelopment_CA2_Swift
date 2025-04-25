@@ -1,195 +1,273 @@
-//
-//  DetailedChatView.swift
-//  Mobile Development CA2
-//
-//  Created by Student on 27/03/2025.
-//
-
 import SwiftUI
+import SwiftData
 
 struct ChatDetailView: View {
-    let user: User
-    @State private var messages: [Message] = []
-    @State private var newMessageText = ""
-    @State private var scrollProxy: ScrollViewProxy? = nil
-    @Binding var isVisible : Bool 
+    @Environment(\.modelContext) var modelContext
+     var chatController = ChatMessageController.shared
+    var authController = AuthController.shared
     
-    // Sample message data model
-    struct Message: Identifiable {
-        let id = UUID()
-        let text: String
-        let isCurrentUser: Bool
-        let timestamp: Date
-    
-    }
+     var emoployeeController = EmployeeController.shared
+
+    @Binding var isVisible: Bool
+    let employeeId: UUID
+    @State  var employeeDetails : Employee?
+    @State  var messages: [ChatMessage] = []
+    @State  var newMessageText = ""
+    @State  var isLoading = false
+    @State  var errorMessage: String?
     
     var body: some View {
-        
         VStack(spacing: 0) {
             // Header with user info
-            VStack(spacing: 8) {
-                if user.profileImage.hasPrefix("system:") {
-                    Image(systemName: String(user.profileImage.dropFirst(7)))
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 60, height: 60)
-                        .foregroundColor(.blue)
-                } else {
-                    Image(user.profileImage)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 60, height: 60)
-                        .clipShape(Circle())
-                }
-                
-                Text(user.name)
-                    .font(.headline)
-                
-                Text("Online")
-                    .font(.caption)
-                    .foregroundColor(.green)
-            }
-            .padding()
-           
-            
-
+            headerView
             
             // Messages list
-            ScrollViewReader { proxy in
-                ScrollView {
-                    LazyVStack(spacing: 8) {
-                        ForEach(messages) { message in
-                            MessageBubble(message: message)
-                                .id(message.id)
-                        }
-                    }
-                    .padding(.horizontal)
-                    .padding(.top, 8)
-                }
-                .onAppear {
-                    scrollProxy = proxy
-                    loadMessages()
-                    
-                }
-                .onChange(of: messages.count) { _ in
-                    scrollToBottom(proxy: proxy)
-                }
-            }
+            messagesListView
             
             // Message input
-            HStack {
-                TextField("Type a message...", text: $newMessageText)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.leading)
-                
-                Button(action: sendMessage) {
-                    Image(systemName: "paperplane.fill")
-                        .padding(10)
-                        .background(newMessageText.isEmpty ? Color.gray : Color.blue)
-                        .foregroundColor(.white)
-                        .clipShape(Circle())
-                }
-                .disabled(newMessageText.isEmpty)
-                .padding(.trailing)
-            }
-            .padding(.vertical, 8)
-            .background(Color(.systemGray6))
+            messageInputView
         }
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
                 VStack {
-                    Text(user.name)
+                    Text(employeeDetails?.name ?? "Unknown")
                         .font(.headline)
-                    Text("Active now")
+                    Text(lastSeenStatus)
                         .font(.caption2)
                         .foregroundColor(.gray)
                 }
             }
         }
-        .onAppear{isVisible = false}
+        .onAppear {
+            isVisible = false
+            loadMessages()
+            loadEmployeeDetails()
+        }
+    }
+    private func loadEmployeeDetails() {
+        employeeDetails = emoployeeController.getEmployeeById(employeeId: employeeId, context: modelContext)
+    }
+    private var lastSeenStatus: String {
+        if let lastMessage = messages.last(where: { !$0.isCurrentUser }) {
+            return "Last seen \(lastMessage.timestamp.formatted(.relative(presentation: .named)))"
+        }
+        return "Online"
     }
     
-    // Message bubble view
-    struct MessageBubble: View {
-        let message: Message
-        
-        var body: some View {
-            HStack {
-                if message.isCurrentUser {
-                    Spacer()
+    private var headerView: some View {
+        VStack(spacing: 8) {
+            if ((employeeDetails?.profileImage.hasPrefix("system:")) != nil) {
+                Image(systemName: String(employeeDetails?.profileImage.dropFirst(7) ?? "person.circle.fill"))
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 60, height: 60)
+                    .foregroundColor(.blue)
+            } else {
+                Image(employeeDetails?.profileImage ?? "person.circle.fill")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 60, height: 60)
+                    .clipShape(Circle())
+            }
+            
+         
+        }
+        .padding()
+    }
+    
+    private var messagesListView: some View {
+        ScrollViewReader { proxy in
+            ScrollView {
+                LazyVStack(spacing: 8) {
+                    ForEach(messages) { message in
+                        MessageBubble(message: message)
+                            .id(message.id)
+                    }
                 }
-                
-                VStack(alignment: message.isCurrentUser ? .trailing : .leading, spacing: 4) {
-                    Text(message.text)
-                        .padding(10)
-                        .background(message.isCurrentUser ? Color.blue : Color(.systemGray5))
-                        .foregroundColor(message.isCurrentUser ? .white : .primary)
-                        .cornerRadius(12)
-                    
-                    Text(message.timestamp, style: .time)
-                        .font(.caption2)
-                        .foregroundColor(.gray)
-                }
-                
-                if !message.isCurrentUser {
-                    Spacer()
-                }
+                .padding(.horizontal)
+                .padding(.top, 8)
+            }
+            .onChange(of: messages.count) { _ in
+                scrollToBottom(proxy: proxy)
             }
         }
     }
     
-    // Load sample messages
+    private var messageInputView: some View {
+        HStack {
+            TextField("Type a message...", text: $newMessageText)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding(.leading)
+            
+            Button(action: sendMessage) {
+                Image(systemName: "paperplane.fill")
+                    .padding(10)
+                    .background(newMessageText.isEmpty ? Color.gray : Color.blue)
+                    .foregroundColor(.white)
+                    .clipShape(Circle())
+            }
+            .disabled(newMessageText.isEmpty)
+            .padding(.trailing)
+        }
+        .padding(.vertical, 8)
+        .background(Color(.systemGray6))
+    }
+    
     private func loadMessages() {
-        let sampleMessages = [
-            Message(text: "Hey there!", isCurrentUser: false, timestamp: Date().addingTimeInterval(-3600)),
-            Message(text: "How are you doing?", isCurrentUser: false, timestamp: Date().addingTimeInterval(-3500)),
-            Message(text: "I'm good, thanks! How about you?", isCurrentUser: true, timestamp: Date().addingTimeInterval(-3400)),
-            Message(text: "Working on that project we discussed", isCurrentUser: false, timestamp: Date().addingTimeInterval(-3300))
-        ]
+        isLoading = true
+        errorMessage = nil
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            messages = sampleMessages
+        guard let userId = authController.getLoggedInID() else {
+            errorMessage = "User not logged in"
+            isLoading = false
+            return
         }
+        
+        do {
+            let fetchDescriptor = FetchDescriptor<ChatMesage>(
+                predicate: #Predicate { $0.user == userId && $0.employee == employeeId },
+                sortBy: [SortDescriptor(\.timestamp)]
+            )
+            
+            let fetchedMessages = try modelContext.fetch(fetchDescriptor)
+            
+            messages = fetchedMessages.map { message in
+                ChatMessage(
+                    id: message.id,
+                    text: message.messaage,
+                    isCurrentUser: message.user == userId,
+                    timestamp: message.timestamp
+                )
+            }
+        } catch {
+            errorMessage = "Failed to load messages: \(error.localizedDescription)"
+        }
+        
+        isLoading = false
     }
     
-    // Send new message
     private func sendMessage() {
-        guard !newMessageText.isEmpty else { return }
+        guard !newMessageText.isEmpty,
+              let userId = authController.getLoggedInID() else { return }
         
-        let newMessage = Message(
-            text: newMessageText,
-            isCurrentUser: true,
+        isLoading = true
+        
+        // Create the message on main thread
+        let userMessage = ChatMesage(
+            id: UUID(),
+            user: userId,
+            employee: employeeId,
+            messaage: newMessageText,
             timestamp: Date()
         )
         
-        withAnimation {
-            messages.append(newMessage)
-        }
-        
-        newMessageText = ""
-        
-        // Simulate reply after 1 second
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            let reply = Message(
-                text: "Thanks for your message!",
-                isCurrentUser: false,
-                timestamp: Date()
-            )
-            withAnimation {
-                messages.append(reply)
+        // Main thread operation
+        DispatchQueue.main.async {
+            do {
+                // Insert and save
+                modelContext.insert(userMessage)
+                try modelContext.save()
+                
+                // Update UI
+                let chatMessage = ChatMessage(
+                    id: userMessage.id,
+                    text: userMessage.messaage,
+                    isCurrentUser: true,
+                    timestamp: userMessage.timestamp
+                )
+                messages.append(chatMessage)
+                newMessageText = ""
+                
+                // Mock reply
+                self.sendMockReply(userId: userId)
+            } catch {
+                errorMessage = "Failed to send message: \(error.localizedDescription)"
+                isLoading = false
             }
         }
     }
+
+    private func sendMockReply(userId: UUID) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            let replies = [
+                "Thanks for your message!",
+                "I'll get back to you soon!",
+                "Appreciate your message!",
+                "Got it, thanks!",
+                "Thank you for reaching out!"
+            ]
+            
+            let replyMessage = ChatMesage(
+                id: UUID(),
+                user: userId,
+                employee: employeeId,
+                messaage: replies.randomElement() ?? "Thank you!",
+                timestamp: Date()
+            )
+            
+            do {
+                modelContext.insert(replyMessage)
+                try modelContext.save()
+                
+                let chatReply = ChatMessage(
+                    id: replyMessage.id,
+                    text: replyMessage.messaage,
+                    isCurrentUser: false,
+                    timestamp: replyMessage.timestamp
+                )
+                messages.append(chatReply)
+            } catch {
+                errorMessage = "Failed to send reply: \(error.localizedDescription)"
+            }
+            
+            isLoading = false
+        }
+    }
     
-    // Scroll to bottom of messages
     private func scrollToBottom(proxy: ScrollViewProxy) {
-        guard let lastMessage = messages.last else { return }
+        guard !messages.isEmpty else { return }
         withAnimation {
-            proxy.scrollTo(lastMessage.id, anchor: .bottom)
+            proxy.scrollTo(messages.last?.id, anchor: .bottom)
         }
     }
 }
 
+// MARK: - Supporting Types
 
+struct ChatMessage: Identifiable {
+    let id: UUID
+    let text: String
+    let isCurrentUser: Bool
+    let timestamp: Date
+}
+
+struct MessageBubble: View {
+    let message: ChatMessage
+    
+    
+    var body: some View {
+        HStack {
+            if message.isCurrentUser {
+                Spacer()
+            }
+            
+            VStack(alignment: message.isCurrentUser ? .trailing : .leading, spacing: 4) {
+                Text(message.text)
+                    .padding(10)
+                    .background(message.isCurrentUser ? Color.blue : Color(.systemGray5))
+                    .foregroundColor(message.isCurrentUser ? .white : .primary)
+                    .cornerRadius(12)
+                
+                Text(message.timestamp, style: .time)
+                    .font(.caption2)
+                    .foregroundColor(.gray)
+            }
+            
+            if !message.isCurrentUser {
+                Spacer()
+            }
+        }
+    }
+}
