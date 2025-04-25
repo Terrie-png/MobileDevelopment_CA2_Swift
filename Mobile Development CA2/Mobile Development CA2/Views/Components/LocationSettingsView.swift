@@ -211,8 +211,8 @@ struct MapLocationPicker: View {
                 print("Map is not zoomed in enough to select a location")
                 return
             }
-        let relativeX = point.x / mapSize.width
-        let relativeY = point.y / mapSize.height
+//        let relativeX = point.x / mapSize.width
+//        let relativeY = point.y / mapSize.height
 //        let latDelta = region.span.latitudeDelta * (0.5 - relativeY) * 2
 //        let lonDelta = region.span.longitudeDelta * (relativeX - 0.5) * 2
         let coordinate = CLLocationCoordinate2D(
