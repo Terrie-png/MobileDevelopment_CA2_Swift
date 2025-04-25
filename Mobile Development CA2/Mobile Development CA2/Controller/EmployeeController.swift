@@ -79,7 +79,9 @@ class EmployeeController {
                    jobType:      sample.jobType,
                    jobTitle:     sample.jobTitle,
                    seniority:    sample.seniority,
-                   salary:       sample.salary
+                   salary:       sample.salary,
+                   geoLatitude: sample.geoLatitude,
+                   geoLongitude: sample.geoLongitude
                )
                context.insert(employee)
            }
