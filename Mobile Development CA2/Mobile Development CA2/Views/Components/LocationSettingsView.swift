@@ -308,31 +308,31 @@ struct MapLocationPicker: View {
 }
 
 // Location Manager Class for getting current device location
-class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
-    private let locationManager = CLLocationManager()
-    @Published var userLocation: CLLocationCoordinate2D?
-    
-    override init() {
-        super.init()
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-    }
-    
-    func requestLocation() {
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.requestLocation()
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.first {
-            userLocation = location.coordinate
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("Location error: \(error.localizedDescription)")
-    }
-}
+//class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+//    private let locationManager = CLLocationManager()
+//    @Published var userLocation: CLLocationCoordinate2D?
+//    
+//    override init() {
+//        super.init()
+//        locationManager.delegate = self
+//        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+//    }
+//    
+//    func requestLocation() {
+//        locationManager.requestWhenInUseAuthorization()
+//        locationManager.requestLocation()
+//    }
+//    
+//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+//        if let location = locations.first {
+//            userLocation = location.coordinate
+//        }
+//    }
+//    
+//    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+//        print("Location error: \(error.localizedDescription)")
+//    }
+//}
 
 // Simple confirmation card for when LookAround isn't available
 struct SimpleLocationConfirmCard: View {

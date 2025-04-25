@@ -5,6 +5,7 @@ struct CardStackView: View {
     @Environment(\.modelContext) var modelContext
     var controller: EmployeeController = EmployeeController.shared
     var interestedController: InterestedEmployeeController = InterestedEmployeeController.shared
+    var authController: AuthController = AuthController.shared
     @State private var employees: [Employee] = []
     @State private var isLoading = true
     
@@ -98,36 +99,32 @@ struct CardStackView: View {
       
     }
     
+    
     private func loadEmployees() {
+        
         isLoading = true
-        let fetched = controller.getAllEmployees(context: modelContext)
-        let interested = interestedController.getAllInterestedEmployees(context: modelContext)
-        
-        if let fetched = fetched, !fetched.isEmpty {
-            // Build a set of all interested employee IDs
-            let interestedIDs = Set(interested?.map { $0.id } ?? [])
-            
-            // Filter out employees whose IDs are already in interestedIDs
-            employees = fetched.filter { !interestedIDs.contains($0.id) }
-        } else {
-            controller.insertSampleEmployees(context: modelContext)
-            employees = controller.getAllEmployees(context: modelContext) ?? []
-            return
-        }
-        
-
-        // Build a set of all interested employee IDs
-        
-            guard let ownerId = authController.getLoggedInID() else{
-                print("User Not logged In!!")
+            guard let fetched = controller.getAllEmployees(context: modelContext), !fetched.isEmpty else {
+                controller.insertSampleEmployees(context: modelContext)
+                employees = controller.getAllEmployees(context: modelContext) ?? []
                 return
             }
-        let interested = interestedController.getAllInterestedEmployees(context: modelContext, ownerId: ownerId)
-        let interestedIDs = Set(interested?.compactMap { $0.id } ?? [])
 
+            // Build a set of all interested employee IDs
 
+                guard let ownerId = authController.getLoggedInID() else{
+                    print("User Not logged In!!")
+                    return
+                }
+            let interested = interestedController.getAllInterestedEmployees(context: modelContext, ownerId: ownerId)
+            let interestedIDs = Set(interested?.compactMap { $0.id } ?? [])
+
+            employees = fetched.filter { employee in
+                guard employee.id != nil else { return false }
+                return !interestedIDs.contains(employee.id)
+            }
+        
         isLoading = false
-    }
+        }
    
     
 

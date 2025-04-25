@@ -15,7 +15,7 @@ struct ChatView: View {
     @Environment(\.modelContext) var modelContext
 //    @StateObject private var chatController: ChatMessageController
 
-   
+    var authController :AuthController = AuthController.shared
     var employeeController = EmployeeController.shared
     var inrestedEmployee = InterestedEmployeeController.shared
     @State private var interestedEmployees: [InterestedEmployee] = []
@@ -84,38 +84,40 @@ struct ChatView: View {
         
         
     }
-    private func fetchInterestedEmployees() async {
-            isLoading = true
-            errorMessage = nil
-            
-            do {
-               
-                let allEmployees = employeeController.getAllEmployees(context: modelContext) ?? []
-                let interestedEmployees = inrestedEmployee.getAllInterestedEmployees(context: modelContext) ?? []
-                let employeeDict = Dictionary(uniqueKeysWithValues: allEmployees.map { ($0.id, $0)})
-                var datajobApplications: [JobApplication] = interestedEmployees.compactMap { interest in
-                    // Find matching employee by ID
-                   
-                    guard let employee = employeeDict[interest.id] else { return nil }
-                    
-                    return JobApplication(
-                        profileImage: employee.profileImage,
-                        name: employee.name,
-                        rating: employee.rating,
-                        location: employee.location,
-                        experience: employee.experience,
-                        jobType: employee.jobType,
-                        jobTitle: employee.jobTitle,
-                        seniority: employee.seniority,
-                        salary: employee.salary,
-                        status: interest.status,
-                        applicationDate: interest.applicationDate
-                    )
-                }
-            }
-            
-            isLoading = false
-        }
+//    private func fetchInterestedEmployees() async {
+//            isLoading = true
+//            errorMessage = nil
+//            
+//            do {
+//               
+//                let allEmployees = employeeController.getAllEmployees(context: modelContext) ?? []
+//                guard let ownerId = authController.getLoggedInID() else{return}
+//                let interestedEmployees = inrestedEmployee.getAllInterestedEmployees(context: modelContext, ownerId: ownerId) ?? []
+//                let employeeDict = Dictionary(uniqueKeysWithValues: allEmployees.map { ($0.id, $0)})
+//                var datajobApplications: [JobApplication] = interestedEmployees.compactMap { interest in
+//                    // Find matching employee by ID
+//                   
+//                    guard let employee = employeeDict[interest.id] else {print("something is wrong"); return }
+//                    
+//                    return JobApplication(
+//                        id: employee.id,
+//                        profileImage: employee.profileImage,
+//                        name: employee.name,
+//                        rating: employee.rating,
+//                        location: employee.location,
+//                        experience: employee.experience,
+//                        jobType: employee.jobType,
+//                        jobTitle: employee.jobTitle,
+//                        seniority: employee.seniority,
+//                        salary: employee.salary,
+//                        status: interest.status,
+//                        applicationDate: interest.applicationDate
+//                    )
+//                }
+//            }
+//            
+//            isLoading = false
+//        }
 }
 
 
