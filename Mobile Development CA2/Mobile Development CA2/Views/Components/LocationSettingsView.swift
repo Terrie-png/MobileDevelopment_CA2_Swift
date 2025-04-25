@@ -45,6 +45,7 @@ struct MapLocationPicker: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var model
+    @State private var visibleRegion: MKCoordinateRegion?
     
     @StateObject private var locationManager = LocationManager()
     var controller: AuthController = AuthController.shared
@@ -248,6 +249,158 @@ struct MapLocationPicker: View {
             lookAroundScene = nil
         }
     }
+    
+    private func handleMapTap(at point: CGPoint, mapSize: CGSize) {
+        
+        guard let region = visibleRegion else { return }
+        let minimumZoomLevel: CLLocationDegrees = 0.05
+            guard region.span.latitudeDelta <= minimumZoomLevel else {
+                print("Map is not zoomed in enough to select a location")
+                return
+            }
+        let relativeX = point.x / mapSize.width
+        let relativeY = point.y / mapSize.height
+//        let latDelta = region.span.latitudeDelta * (0.5 - relativeY) * 2
+//        let lonDelta = region.span.longitudeDelta * (relativeX - 0.5) * 2
+        let coordinate = CLLocationCoordinate2D(
+            latitude: region.center.latitude ,//+ latDelta,
+            longitude: region.center.longitude //+ lonDelta
+        )
+        selectedLocation = coordinate
+        lookupLocationName(for: coordinate)
+    }
+    
+    private func lookupLocationName(for coordinate: CLLocationCoordinate2D) {
+        let geocoder = CLGeocoder()
+        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        
+        geocoder.reverseGeocodeLocation(location) { placemarks, error in
+            if let error = error {
+                print("Geocoding error: \(error.localizedDescription)")
+                selectedLocationName = "Selected Location"
+                return
+            }
+            
+            if let placemark = placemarks?.first {
+                // Create a formatted address
+                let name = placemark.name ?? ""
+                let thoroughfare = placemark.thoroughfare ?? ""
+                let subThoroughfare = placemark.subThoroughfare ?? ""
+                let locality = placemark.locality ?? ""
+                
+                if !name.isEmpty {
+                    selectedLocationName = name
+                } else if !thoroughfare.isEmpty {
+                    selectedLocationName = [subThoroughfare, thoroughfare, locality]
+                        .filter { !$0.isEmpty }
+                        .joined(separator: " ")
+                } else {
+                    selectedLocationName = "Selected Location"
+                }
+                
+                // Create a MapItem for the LookAround preview
+                let item = MKMapItem(placemark: MKPlacemark(coordinate: coordinate))
+                item.name = selectedLocationName
+                mapSelection = item
+            }
+        }
+    }
+}
+
+// Location Manager Class for getting current device location
+class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+    private let locationManager = CLLocationManager()
+    @Published var userLocation: CLLocationCoordinate2D?
+    
+    override init() {
+        super.init()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+    }
+    
+    func requestLocation() {
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.requestLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.first {
+            userLocation = location.coordinate
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Location error: \(error.localizedDescription)")
+    }
+}
+
+// Simple confirmation card for when LookAround isn't available
+struct SimpleLocationConfirmCard: View {
+    var locationName: String
+    var confirmAction: () -> Void
+    @Environment(\.colorScheme) private var colorScheme
+    
+    var body: some View {
+        VStack(spacing: 12) {
+            HStack {
+                Image(systemName: "mappin.circle.fill")
+                    .font(.title)
+                    .foregroundColor(.red)
+                
+                Text(locationName)
+                    .font(.headline)
+                    .lineLimit(2)
+                
+                Spacer()
+            }
+            
+            Button(action: confirmAction) {
+                Text("Confirm Location")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(.blue)
+                    .foregroundColor(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+            }
+        }
+        .padding()
+        .background(colorScheme == .dark ? Color(.systemGray6) : Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 15))
+        .shadow(radius: 10)
+        .padding()
+    }
+}
+
+struct LocationPreviewCard: View {
+    let scene: MKLookAroundScene?
+    var confirmAction: () -> Void
+    @Environment(\.colorScheme) private var colorScheme
+    
+    var body: some View {
+        VStack {
+            if let scene {
+                LookAroundPreview(initialScene: scene)
+                    .frame(height: 150)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+            }
+            
+            Button(action: confirmAction) {
+                Text("Confirm Location")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(.blue)
+                    .foregroundColor(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+            }
+        }
+        .padding()
+        .background(colorScheme == .dark ? Color(.systemGray6) : Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 15))
+        .shadow(radius: 10)
+        .padding()
+    }
 }
 
 // Rest of your code (SearchResultsView, LocationPreviewCard, LocationSettingsView) remains the same...
@@ -295,37 +448,6 @@ struct SearchResultsView: View {
         .background(colorScheme == .dark ? Color(.systemGray6) : Color(.systemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .shadow(radius: 5)
-        .padding()
-    }
-}
-
-struct LocationPreviewCard: View {
-    let scene: MKLookAroundScene?
-    var confirmAction: () -> Void
-    @Environment(\.colorScheme) private var colorScheme
-    
-    var body: some View {
-        VStack {
-            if let scene {
-                LookAroundPreview(initialScene: scene)
-                    .frame(height: 150)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-            }
-            
-            Button(action: confirmAction) {
-                Text("Confirm Location")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(.blue)
-                    .foregroundColor(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-            }
-        }
-        .padding()
-        .background(colorScheme == .dark ? Color(.systemGray6) : Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 15))
-        .shadow(radius: 10)
         .padding()
     }
 }
@@ -390,6 +512,7 @@ struct LocationSettingsView: View {
             
         }
     }
+    
     
     func loadUserLocation(){
         guard let userModel = AuthController.shared.getUserModel(modelContext: context) else {

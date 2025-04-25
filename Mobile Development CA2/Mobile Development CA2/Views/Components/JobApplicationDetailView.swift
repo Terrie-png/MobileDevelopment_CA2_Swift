@@ -1,20 +1,22 @@
-//
-//  JobApplicationDetailView.swift
-//  Mobile Development CA2
-//
-//  Created by Student on 28/03/2025.
-//
-
 import SwiftUI
+
 struct JobApplicationDetailView: View {
     let jobApplication: JobApplication
-    @Binding var isVisible:Bool
+    @Binding var isVisible: Bool
     @Environment(\.presentationMode) var presentationMode
-    
+    @Environment(\.modelContext) var modelContext
+
+    // Controllers
+    var authController: AuthController = .shared
+    var interestedController: InterestedEmployeeController = .shared
+
+    // State for showing the withdrawal confirmation alert
+    @State private var showWithdrawalConfirmation = false
+
     var body: some View {
-        ZStack{
+        ZStack {
             Color.secondaryColor.ignoresSafeArea()
-            
+
             VStack(spacing: 0) {
                 // Custom Back Button
                 HStack {
@@ -30,7 +32,7 @@ struct JobApplicationDetailView: View {
                 }
                 .padding()
                 .background(Color.clear)
-                
+
                 // Scrollable Content
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
@@ -39,11 +41,11 @@ struct JobApplicationDetailView: View {
                             Text(jobApplication.name)
                                 .font(.title)
                                 .fontWeight(.bold)
-                            
+
                             Text(jobApplication.jobTitle)
                                 .font(.headline)
                                 .foregroundColor(.secondary)
-                            
+
                             // Status Tag
                             Text(jobApplication.status.rawValue)
                                 .font(.caption)
@@ -53,8 +55,7 @@ struct JobApplicationDetailView: View {
                                 .cornerRadius(6)
                         }
                         .padding(.bottom)
-                        
-                        
+
                         // Job Details
                         Group {
                             DetailRow(
@@ -62,42 +63,38 @@ struct JobApplicationDetailView: View {
                                 title: "Job Type",
                                 value: jobApplication.jobType
                             )
-                            
                             DetailRow(
                                 icon: "star",
                                 title: "Seniority",
                                 value: jobApplication.seniority
                             )
-                            
                             DetailRow(
                                 icon: "location",
                                 title: "Location",
                                 value: jobApplication.location
                             )
-                            
                             DetailRow(
                                 icon: "clock",
                                 title: "Experience",
                                 value: jobApplication.experience
                             )
-                            
                             DetailRow(
                                 icon: "dollarsign.circle",
                                 title: "Salary",
                                 value: jobApplication.salary
                             )
-                            
                             DetailRow(
                                 icon: "calendar",
                                 title: "Application Date",
                                 value: formatDate(jobApplication.applicationDate)
                             )
                         }
-                        
+
                         // Action Buttons
                         HStack(spacing: 15) {
                             Button(action: {
-                                // Withdraw Application
+                                // Trigger confirmation alert
+                                showWithdrawalConfirmation = true
                             }) {
                                 Text("Withdraw")
                                     .frame(maxWidth: .infinity)
@@ -112,13 +109,38 @@ struct JobApplicationDetailView: View {
                     .padding()
                     .background(Color.clear)
                 }
-            }.onAppear{
+            }
+            .onAppear {
                 isVisible = false
             }
             .navigationBarHidden(true)
+            // Confirmation Alert
+            .alert(
+                "Confirm Withdrawal",
+                isPresented: $showWithdrawalConfirmation
+            ) {
+                Button("Withdraw", role: .destructive) {
+                    guard let ownerId = authController.getLoggedInID() else {
+                        print("User Not logged In!!")
+                        return
+                    }
+                    if let _ = interestedController.deleteInterestedEmployee(
+                        employeeId: jobApplication.id,
+                        ownerId: ownerId,
+                        context: modelContext
+                    ) {
+                        // Dismiss view upon successful withdrawal
+                        presentationMode.wrappedValue.dismiss()
+                    } else {
+                        // Handle failure if needed
+                        print("Failed to withdraw application")
+                    }
+                }
+                Button("Cancel", role: .cancel) { }
+            }
         }
     }
-    
+
     // Date Formatter
     private func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
@@ -127,11 +149,10 @@ struct JobApplicationDetailView: View {
         return formatter.string(from: date)
     }
 }
- 
+
 #Preview {
-     @Previewable @State var isVisible  = false
-    NavigationView{
+    @Previewable @State var isVisible = false
+    NavigationView {
         AppliedJobsView(isVisible: $isVisible)
     }
-
 }

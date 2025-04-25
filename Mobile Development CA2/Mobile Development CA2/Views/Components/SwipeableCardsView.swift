@@ -44,7 +44,7 @@ struct SwipeableCardsView: View {
     let employeeInterestedController = InterestedEmployeeController.shared
     private let swipeThreshold: CGFloat = 100.0
     private let rotationFactor: Double = 35.0
-    
+    var authController: AuthController = AuthController.shared
     var action: (Model) -> Void
     
     var body: some View {
@@ -97,7 +97,12 @@ struct SwipeableCardsView: View {
                                             self.dragState = .zero
                                             
                                             if swipeDirection == .right, let id = swipedCardID {
-                                                let data = InterestedEmployee(id: id, status: .offered, applicationDate: Date())
+                                                
+                                                    guard let ownerId = authController.getLoggedInID() else{
+                                                        print("User Not logged In!!")
+                                                        return
+                                                    }
+                                                let data = InterestedEmployee(id: id, status: .offered, applicationDate: Date(), ownerId: ownerId)
                                                 modelContext.insert(data)
                                             }
                                             do{

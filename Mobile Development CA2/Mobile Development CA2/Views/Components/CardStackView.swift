@@ -116,6 +116,13 @@ struct CardStackView: View {
         }
         
 
+        // Build a set of all interested employee IDs
+        
+            guard let ownerId = authController.getLoggedInID() else{
+                print("User Not logged In!!")
+                return
+            }
+        let interested = interestedController.getAllInterestedEmployees(context: modelContext, ownerId: ownerId)
         let interestedIDs = Set(interested?.compactMap { $0.id } ?? [])
 
 

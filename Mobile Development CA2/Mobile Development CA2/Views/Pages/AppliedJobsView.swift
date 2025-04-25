@@ -4,61 +4,92 @@ import SwiftUI
 struct AppliedJobsView: View {
     // Updated sample job applications to match the new structure
     @State var jobApplications: [JobApplication] = []
-    @Binding var isVisible : Bool
-    
+    @Binding var isVisible: Bool
+
     @Environment(\.modelContext) var modelContext
-    var controller = InterestedEmployeeController.shared // This makes sure it's initialized and persists
+    var controller = InterestedEmployeeController.shared
     var employeeController = EmployeeController.shared
-    @State private var interestedEmployees: [InterestedEmployee] = []
+    var authController = AuthController.shared
+
     var body: some View {
-        ZStack{
-            Color.secondaryColor.ignoresSafeArea()
-            List(jobApplications) { application in
-                NavigationLink(destination: JobApplicationDetailView(jobApplication: application, isVisible: $isVisible)) {
-                    HStack {
-                        // Placeholder for profile image
-                        Image(systemName: "person.crop.circle.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 50, height: 50)
-                            .foregroundColor(.gray)
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(application.name)
-                                .font(.headline)
-                            
-                            Text(application.jobTitle)
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                            
-                            HStack {
-                                Text(application.status.rawValue)
-                                    .font(.caption2)
-                                    .padding(4)
-                                    .background(application.status.statusColor)
-                                    .foregroundColor(.white)
-                                    .cornerRadius(4)
+        ZStack {
+            Color.secondaryColor
+                .ignoresSafeArea()
+
+            if jobApplications.isEmpty {
+                // Empty state
+                VStack {
+                    Spacer()
+                    Text("No Data Found.\nPlease try again later...")
+                        .multilineTextAlignment(.center)
+                        .font(.headline)
+                        .foregroundColor(.secondary)
+                        .padding()
+                    Spacer()
+                }
+            } else {
+                // Populated list
+                List(jobApplications) { application in
+                    NavigationLink(
+                        destination: JobApplicationDetailView(
+                            jobApplication: application,
+                            isVisible: $isVisible
+                        )
+                    ) {
+                        HStack {
+                            // Placeholder for profile image
+                            Image(systemName: "person.crop.circle.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 50, height: 50)
+                                .foregroundColor(.gray)
+
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(application.name)
+                                    .font(.headline)
+
+                                Text(application.jobTitle)
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+
+                                HStack {
+                                    Text(application.status.rawValue)
+                                        .font(.caption2)
+                                        .padding(4)
+                                        .background(application.status.statusColor)
+                                        .foregroundColor(.white)
+                                        .cornerRadius(4)
+                                }
                             }
                         }
+                        .padding(.vertical, 8)
                     }
-                    .padding(.vertical, 8)
-                }.listRowBackground(Color.clear)
+                    .listRowBackground(Color.clear)
+                }
+                .listStyle(PlainListStyle())
+                .background(Color.clear)
             }
-            
         }
-        .listStyle(PlainListStyle())
-        .background(Color.clear)
         .onAppear {
             let allEmployees = employeeController.getAllEmployees(context: modelContext) ?? []
-            let interestedList = controller.getAllInterestedEmployees(context: modelContext) ?? []
-            
-            let employeeDict = Dictionary(uniqueKeysWithValues: allEmployees.map { ($0.id, $0) })
-            
-            var datajobApplications: [JobApplication] = interestedList.compactMap { interest in
-                // Find matching employee by ID
+
+            guard let ownerId = authController.getLoggedInID() else {
+                print("User Not logged In!!")
+                return
+            }
+            let interestedList = controller.getAllInterestedEmployees(
+                context: modelContext,
+                ownerId: ownerId
+            ) ?? []
+
+            let employeeDict = Dictionary(
+                uniqueKeysWithValues: allEmployees.map { ($0.id, $0) }
+            )
+
+            let datajobApplications: [JobApplication] = interestedList.compactMap { interest in
                 guard let employee = employeeDict[interest.id] else { return nil }
-                
                 return JobApplication(
+                    id: employee.id,
                     profileImage: employee.profileImage,
                     name: employee.name,
                     rating: employee.rating,
@@ -72,7 +103,7 @@ struct AppliedJobsView: View {
                     applicationDate: interest.applicationDate
                 )
             }
-            
+
             self.jobApplications = datajobApplications
         }
     }
@@ -80,6 +111,6 @@ struct AppliedJobsView: View {
 
 // Preview
 #Preview {
-     @Previewable @State var isVisible  = false
+    @Previewable @State var isVisible = false
     AppliedJobsView(isVisible: $isVisible)
 }

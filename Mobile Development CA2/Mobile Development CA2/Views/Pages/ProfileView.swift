@@ -30,9 +30,11 @@ struct ProfileView: View {
                             .bold()
                         Text("User Type: \(user.userType)")
                             .foregroundColor(.gray)
-                        if let location = user.location {
-                            Text("Location: \(location)")
-                        }
+                        if let loc = user.location, !loc.isEmpty {
+                             Text("Location: \(loc)")
+                           } else {
+                             Text("Location: Not Selected")
+                           }
                         if let lat = user.geoLatitude, let long = user.geoLongitude {
                             Text("Lat: \(lat), Long: \(long)")
                         }
@@ -96,11 +98,13 @@ struct ProfileView: View {
         }
         .onAppear {
             fetchUserModel()
+            
         }
     }
 
     private func fetchUserModel() {
         userModel = authController.getUserModel(modelContext: modelContext)
         print(userModel?.username)
+     
     }
 }

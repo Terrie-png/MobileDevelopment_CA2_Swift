@@ -13,8 +13,8 @@ class InterestedEmployeeController{
     
     private init(){}
     
-    func getAllInterestedEmployees(context: ModelContext) -> [InterestedEmployee]? {
-        let fetchDescriptor = FetchDescriptor<InterestedEmployee>()
+    func getAllInterestedEmployees(context: ModelContext, ownerId: UUID) -> [InterestedEmployee]? {
+        let fetchDescriptor = FetchDescriptor<InterestedEmployee>(predicate: #Predicate { $0.ownerId == ownerId })
         
         do {
             return try context.fetch(fetchDescriptor)
@@ -25,8 +25,8 @@ class InterestedEmployeeController{
     }
 
     // Fetch a single employee by ID
-    func getInterestedEmployeeById(employeeId: UUID, context: ModelContext) -> InterestedEmployee? {
-        let fetchDescriptor = FetchDescriptor<InterestedEmployee>(predicate: #Predicate { $0.id == employeeId })
+    func getInterestedEmployeeById(employeeId: UUID, ownerId: UUID, context: ModelContext) -> InterestedEmployee? {
+        let fetchDescriptor = FetchDescriptor<InterestedEmployee>(predicate: #Predicate { $0.id == employeeId && $0.ownerId == ownerId })
         
         do {
             return try context.fetch(fetchDescriptor).first
@@ -37,19 +37,21 @@ class InterestedEmployeeController{
     }
     
 
-    func deleteInterestedEmployee(employeeId: UUID, context: ModelContext) -> String? {
-        let fetchDescriptor = FetchDescriptor<InterestedEmployee>(predicate: #Predicate { $0.id == employeeId })
+    func deleteInterestedEmployee(employeeId: UUID, ownerId: UUID, context: ModelContext) -> Bool? {
+        let fetchDescriptor = FetchDescriptor<InterestedEmployee>(predicate: #Predicate { $0.id == employeeId && $0.ownerId == ownerId })
         
         do {
             if let employee = try context.fetch(fetchDescriptor).first {
                 context.delete(employee)
                 try context.save()
-                return nil
+                return true
             } else {
-                return "Employee not found!"
+                print("Failed to delete interest employees , no employee is found")
+                return false
             }
         } catch {
-            return "Error deleting employee: \(error.localizedDescription)"
+            print( "Error deleting employee: \(error.localizedDescription)")
+            return false
         }
     }
 }
