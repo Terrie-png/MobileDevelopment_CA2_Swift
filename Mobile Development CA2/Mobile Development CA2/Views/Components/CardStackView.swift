@@ -95,10 +95,7 @@ struct CardStackView: View {
         .onAppear {
             loadEmployees()
         }
-        .onChange(of: selectedJobTypes) { _ in applyFilters() }
-        .onChange(of: selectedLocations) { _ in applyFilters() }
-        .onChange(of: selectedSeniorities) { _ in applyFilters() }
-        .onChange(of: selectedJobTitles) { _ in applyFilters() }
+      
     }
     
     private func loadEmployees() {
@@ -121,15 +118,10 @@ struct CardStackView: View {
 
         let interestedIDs = Set(interested?.compactMap { $0.id } ?? [])
 
-//        
-//        employees = fetched.filter { employee in
-//            guard employee.id != nil else { return false }
-//            return !interestedIDs.contains(employee.id)
+
         isLoading = false
     }
-     func applyFilters() {
-           // Filters are automatically applied through the filteredEmployees computed property
-       }
+   
     
 
 }
