@@ -6,9 +6,11 @@ struct CardStackView: View {
     var controller: EmployeeController = EmployeeController.shared
     var interestedController: InterestedEmployeeController = InterestedEmployeeController.shared
     var authController: AuthController = AuthController.shared
+    var userController: UserController = UserController.shared
     @State private var employees: [Employee] = []
     @State private var isLoading = true
-    
+    @State private var userLatittude :Double = 0
+    @State private var userLongitutde :Double = 0
     // Filter bindings
     @Binding var selectedJobTypes: Set<String>
     @Binding var selectedLocations: Set<String>
@@ -19,15 +21,8 @@ struct CardStackView: View {
     private var filteredEmployees: [Employee] {
         guard !employees.isEmpty else { return [] }
         
-        // If no filters are selected, return all employees
-        if selectedJobTypes.isEmpty &&
-            selectedLocations.isEmpty &&
-            selectedSeniorities.isEmpty &&
-            selectedJobTitles.isEmpty {
-            return employees
-        }
-        
-        return employees.filter { employee in
+        // First apply all filters
+        var filtered = employees.filter { employee in
             // Job Type filter
             if !selectedJobTypes.isEmpty {
                 if !selectedJobTypes.contains(employee.jobType) {
@@ -59,6 +54,36 @@ struct CardStackView: View {
             
             return true
         }
+        
+        // If no filters are selected, use all employees
+        if selectedJobTypes.isEmpty &&
+            selectedLocations.isEmpty &&
+            selectedSeniorities.isEmpty &&
+            selectedJobTitles.isEmpty {
+            filtered = employees
+        }
+        
+        // Sort by distance if user location is available
+        if userLatittude != 0 && userLongitutde != 0 {
+            filtered.sort { emp1, emp2 in
+                let distance1 = calculateDistance(from: (userLatittude, userLongitutde),
+                                               to: (emp1.geoLatitude, emp1.geoLongitude))
+                let distance2 = calculateDistance(from: (userLatittude, userLongitutde),
+                                               to: (emp2.geoLatitude, emp2.geoLongitude))
+                return distance1 < distance2
+            }
+        }
+        
+        return filtered
+    
+        
+    }
+    private func calculateDistance(from: (Double, Double), to: (Double, Double)) -> Double {
+        // Simple distance calculation using Pythagorean theorem
+        // For more accurate results, you might want to use Haversine formula
+        let latDiff = from.0 - to.0
+        let lonDiff = from.1 - to.1
+        return sqrt(latDiff * latDiff + lonDiff * lonDiff)
     }
     
     var body: some View {
@@ -116,6 +141,10 @@ struct CardStackView: View {
                     return
                 }
             let interested = interestedController.getAllInterestedEmployees(context: modelContext, ownerId: ownerId)
+            let userLocation = authController.getUserModel(modelContext: modelContext)
+        userLatittude = userLocation?.geoLatitude ?? 0
+        userLongitutde = userLocation?.geoLongitude ?? 0
+        
             let interestedIDs = Set(interested?.compactMap { $0.id } ?? [])
 
             employees = fetched.filter { employee in
@@ -128,21 +157,4 @@ struct CardStackView: View {
    
     
 
-}
-
-// Preview with sample bindings
-struct CardStackView_Previews: PreviewProvider {
-    @State static var jobTypes: Set<String> = ["Full-time"]
-    @State static var locations: Set<String> = ["New York"]
-    @State static var seniorities: Set<String> = []
-    @State static var jobTitles: Set<String> = []
-    
-    static var previews: some View {
-        CardStackView(
-            selectedJobTypes: $jobTypes,
-            selectedLocations: $locations,
-            selectedSeniorities: $seniorities,
-            selectedJobTitles: $jobTitles
-        )
-    }
 }
