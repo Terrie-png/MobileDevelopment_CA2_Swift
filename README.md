@@ -45,7 +45,6 @@ JobMatch revolutionizes hiring by introducing a **swipe-based interface** (like 
 |---------|------------|  
 | **Swipe-to-Hire** | Employers/candidates accept/reject profiles with a swipe |  
 | **Matching System** | Notifies when both parties "like" each other |  
-| **In-App Chat** | Real-time messaging for matched users |  
 | **Smart Job Search** | Find jobs by location, keywords, or salary range |  
 | **Profile Management** | Edit personal details, skills, and work experience |  
 
