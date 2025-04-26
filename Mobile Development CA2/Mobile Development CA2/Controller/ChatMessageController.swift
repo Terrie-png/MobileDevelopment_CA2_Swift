@@ -73,7 +73,8 @@ class ChatMessageController {
                 user: userId,
                 employee: employeeId,
                 messaage: messageText,
-                timestamp: Date()
+                timestamp: Date(),
+                chatDirection: true
             )
             context.insert(message)
             try context.save()
@@ -91,7 +92,8 @@ class ChatMessageController {
                 user: userId,
                 employee: employeeId,
                 messaage: messageText,
-                timestamp: Date()
+                timestamp: Date(),
+                chatDirection: false
             )
             context.insert(message)
             try context.save()

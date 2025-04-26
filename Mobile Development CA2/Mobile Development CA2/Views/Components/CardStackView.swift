@@ -1,6 +1,9 @@
 import SwiftUI
 import SwiftData
-
+extension Double {
+    var degreesToRadians: Double { return self * .pi / 180 }
+    var radiansToDegrees: Double { return self * 180 / .pi }
+}
 struct CardStackView: View {
     @Environment(\.modelContext) var modelContext
     var controller: EmployeeController = EmployeeController.shared
@@ -9,6 +12,7 @@ struct CardStackView: View {
     var userController: UserController = UserController.shared
     @State private var employees: [Employee] = []
     @State private var isLoading = true
+   
     @State private var userLatittude :Double = 0
     @State private var userLongitutde :Double = 0
     // Filter bindings
@@ -79,12 +83,24 @@ struct CardStackView: View {
         
     }
     private func calculateDistance(from: (Double, Double), to: (Double, Double)) -> Double {
-        // Simple distance calculation using Pythagorean theorem
-        // For more accurate results, you might want to use Haversine formula
-        let latDiff = from.0 - to.0
-        let lonDiff = from.1 - to.1
-        return sqrt(latDiff * latDiff + lonDiff * lonDiff)
+        let earthRadius = 6371000.0 // meters
+        
+        let lat1 = from.0.degreesToRadians
+        let lon1 = from.1.degreesToRadians
+        let lat2 = to.0.degreesToRadians
+        let lon2 = to.1.degreesToRadians
+        
+        let dLat = lat2 - lat1
+        let dLon = lon2 - lon1
+        
+        let a = sin(dLat/2) * sin(dLat/2) +
+                cos(lat1) * cos(lat2) *
+                sin(dLon/2) * sin(dLon/2)
+        let c = 2 * atan2(sqrt(a), sqrt(1-a))
+        
+        return earthRadius * c
     }
+    
     
     var body: some View {
         VStack {

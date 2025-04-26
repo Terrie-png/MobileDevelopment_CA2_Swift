@@ -15,6 +15,7 @@ struct CompiledMainPageView: View {
     @State private var selectedLocations: Set<String> = []
     @State private var selectedSeniorities: Set<String> = []
     @State private var selectedJobTitles: Set<String> = []
+    
  
     
     @Binding var isLoggedIn: Bool

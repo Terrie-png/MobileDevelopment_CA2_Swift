@@ -10,6 +10,8 @@ struct ChatDetailView: View {
 
     @Binding var isVisible: Bool
     let employeeId: UUID
+   
+
     @State  var employeeDetails : Employee?
     @State  var messages: [ChatMessage] = []
     @State  var newMessageText = ""
@@ -119,6 +121,7 @@ struct ChatDetailView: View {
         isLoading = true
         errorMessage = nil
         
+        
         guard let userId = authController.getLoggedInID() else {
             errorMessage = "User not logged in"
             isLoading = false
@@ -137,7 +140,7 @@ struct ChatDetailView: View {
                 ChatMessage(
                     id: message.id,
                     text: message.messaage,
-                    isCurrentUser: message.user == userId,
+                    isCurrentUser: message.chatDirection ,
                     timestamp: message.timestamp
                 )
             }
@@ -160,7 +163,8 @@ struct ChatDetailView: View {
             user: userId,
             employee: employeeId,
             messaage: newMessageText,
-            timestamp: Date()
+            timestamp: Date(),
+            chatDirection: true
         )
         
         // Main thread operation
@@ -204,7 +208,8 @@ struct ChatDetailView: View {
                 user: userId,
                 employee: employeeId,
                 messaage: replies.randomElement() ?? "Thank you!",
-                timestamp: Date()
+                timestamp: Date(),
+                chatDirection: false
             )
             
             do {

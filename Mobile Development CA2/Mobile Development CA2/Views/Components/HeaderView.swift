@@ -130,6 +130,7 @@ struct FilterModalView: View {
                         options: seniorities,
                         selectedOptions: $selectedSeniorities
                     )
+                   
                     
                     Spacer()
                 }
@@ -137,24 +138,8 @@ struct FilterModalView: View {
             }
             .navigationTitle("Filters")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Remove") {
-                       
-                        
-                        isPresented = false
-                     
-                    }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Apply") {
-                        // Apply filters here
-                        isPresented = false
-                     
-                    }
-                    .fontWeight(.bold)
-                }
-            }
+            
+            
         }
     }
 }
@@ -203,6 +188,7 @@ struct FilterSectionView: View {
                             }
                         }
                     }
+                    
                 }
                 .padding(.top, 5)
             }
