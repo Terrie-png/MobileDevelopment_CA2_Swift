@@ -1,9 +1,6 @@
 # LinkUp 🔥  
 *A Tinder-style hiring app for employers and job seekers*  
 
-
-*(Replace with actual screenshots later)*  
-
 ---
 
 ## 📱 About the App  
