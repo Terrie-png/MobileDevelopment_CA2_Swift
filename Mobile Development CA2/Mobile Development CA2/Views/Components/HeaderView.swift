@@ -106,7 +106,7 @@ struct FilterModalView: View {
     
     
     let jobTypes = ["Full-time", "Part-time", "Contract", "Freelance", "Intern"]
-    let locations = ["New York", "San Francisco", "Chicago", "Austin", "Seattle", "Los Angeles"]
+    let locations = ["New York", "San Francisco", "Chicago", "Austin", "Seattle", "Los Angeles","Dublin","Dundalk"]
     let seniorities = ["Junior", "Mid", "Senior", "Lead", "Intern"]
     
     var body: some View {
