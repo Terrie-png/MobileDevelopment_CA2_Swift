@@ -31,7 +31,7 @@ struct HeaderView: View {
                             filterButton
                         }
                         
-                        notificationButton
+//                        notificationButton
                     }
                 }
                 .padding(.horizontal, 20)
