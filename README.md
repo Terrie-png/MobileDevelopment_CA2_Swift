@@ -1,7 +1,7 @@
 # LinkUp 🔥  
 *A Tinder-style hiring app for employers and job seekers*  
 
-![JobMatch App Preview](https://via.placeholder.com/800x400?text=JobMatch+App+Screenshots)  
+
 *(Replace with actual screenshots later)*  
 
 ---
@@ -58,7 +58,4 @@ JobMatch revolutionizes hiring by introducing a **swipe-based interface** (like 
 - iOS 17+ (SwiftData requires iOS 17)  
 - CocoaPods/Swift Package Manager (if using Firebase)  
 
-### Steps  
-1. Clone the repo:  
-   ```bash  
-   git clone https://github.com/yourusername/JobMatch.git  
+
