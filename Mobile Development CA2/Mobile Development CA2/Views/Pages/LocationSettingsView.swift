@@ -91,7 +91,7 @@ struct MapLocationPicker: View {
                             dismiss()
                         } label: {
                             Image(systemName: "xmark.circle.fill")
-                                .font(.title2)
+                                .font(.title)
                                 .foregroundColor(.gray)
                                 .padding()
                         }

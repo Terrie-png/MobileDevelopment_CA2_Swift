@@ -50,7 +50,7 @@ struct CompiledMainPageView: View {
                             
                         case 1:
                             AppliedJobsView(isVisible: $isVisible).onAppear{
-                                title = "Jobs Applied"
+                                title = "Jobs Hiring People"
                                 isVisible = true
                             }
                         case 2:

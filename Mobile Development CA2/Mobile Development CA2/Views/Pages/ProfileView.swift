@@ -65,17 +65,7 @@ struct ProfileView: View {
                         .shadow(radius: 2)
                     }
 
-                    NavigationLink(destination: test()) {
-                        HStack {
-                            Image(systemName: "person.crop.circle")
-                            Text("Edit Profile")
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding()
-                        .background(Color.white)
-                        .cornerRadius(10)
-                        .shadow(radius: 2)
-                    }
+
                 }
                 .padding(.horizontal)
 
