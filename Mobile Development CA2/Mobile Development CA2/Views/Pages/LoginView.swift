@@ -16,9 +16,10 @@ struct LoginView: View {
                     .ignoresSafeArea()
 
                 VStack(spacing: 24) {
-                    Text("LinkUp")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
+                    Image("Logo")
+                        .resizable() // Add this!
+                        .scaledToFit()
+                        .frame(width: 120, height: 120) // <-- set desired size here
                         .padding(.top, 40)
 
                     VStack(spacing: 16) {
