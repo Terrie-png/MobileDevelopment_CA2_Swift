@@ -19,35 +19,42 @@ struct ChatDetailView: View {
     @State  var errorMessage: String?
     
     var body: some View {
-        VStack(spacing: 0) {
-            // Header with user info
-            headerView
+        ZStack {
+            Color.secondaryColor.ignoresSafeArea()
             
-            // Messages list
-            messagesListView
-            
-            // Message input
-            messageInputView
-        }
-        .navigationTitle("")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                VStack {
-                    Text(employeeDetails?.name ?? "Unknown")
-                        .font(.headline)
-                    Text(lastSeenStatus)
-                        .font(.caption2)
-                        .foregroundColor(.gray)
+            VStack(spacing: 0) {
+                // Divider immediately after toolbar
+                Divider()
+                    .frame(height: 1)
+                    .background(Color.gray.opacity(0.4))
+                
+                // Messages
+                messagesListView
+                
+                // Input
+                messageInputView
+            }
+            .navigationTitle("")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    VStack(spacing: 2) {
+                        Text(employeeDetails?.name ?? "Unknown")
+                            .font(.headline)
+                        Text(lastSeenStatus)
+                            .font(.caption2)
+                            .foregroundColor(.gray)
+                    }
                 }
             }
-        }
-        .onAppear {
-            isVisible = false
-            loadMessages()
-            loadEmployeeDetails()
+            .onAppear {
+                isVisible = false
+                loadMessages()
+                loadEmployeeDetails()
+            }
         }
     }
+
     private func loadEmployeeDetails() {
         employeeDetails = emoployeeController.getEmployeeById(employeeId: employeeId, context: modelContext)
     }
@@ -73,12 +80,11 @@ struct ChatDetailView: View {
                     .frame(width: 60, height: 60)
                     .clipShape(Circle())
             }
-            
-         
         }
         .padding()
+        .background(Color.secondaryColor) // <-- just use background here, NO ignoresSafeArea
     }
-    
+
     private var messagesListView: some View {
         ScrollViewReader { proxy in
             ScrollView {
@@ -107,16 +113,16 @@ struct ChatDetailView: View {
                 Image(systemName: "paperplane.fill")
                     .padding(10)
                     .background(newMessageText.isEmpty ? Color.gray : Color.blue)
-                    .foregroundColor(.white)
+                    .foregroundColor(Color.secondaryColor)
                     .clipShape(Circle())
             }
             .disabled(newMessageText.isEmpty)
             .padding(.trailing)
         }
         .padding(.vertical, 8)
-        .background(Color(.systemGray6))
+        .background(Color.secondaryColor) // <-- use your app's color here
     }
-    
+    		
     private func loadMessages() {
         isLoading = true
         errorMessage = nil
