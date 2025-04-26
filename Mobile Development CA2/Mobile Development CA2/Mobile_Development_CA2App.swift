@@ -14,7 +14,8 @@ struct Mobile_Development_CA2App: App {
 
     var body: some Scene {
         WindowGroup {
-            SplashView().modelContainer(for: [Employee.self,InterestedEmployee.self, UserModel.self])
+            SplashView().modelContainer(for: [Employee.self,InterestedEmployee.self, UserModel.self,ChatMesage.self])
+                
         }
     }
 }

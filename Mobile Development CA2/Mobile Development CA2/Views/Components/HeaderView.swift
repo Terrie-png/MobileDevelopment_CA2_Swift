@@ -31,7 +31,7 @@ struct HeaderView: View {
                             filterButton
                         }
                         
-                        notificationButton
+//                        notificationButton
                     }
                 }
                 .padding(.horizontal, 20)
@@ -106,7 +106,7 @@ struct FilterModalView: View {
     
     
     let jobTypes = ["Full-time", "Part-time", "Contract", "Freelance", "Intern"]
-    let locations = ["New York", "San Francisco", "Chicago", "Austin", "Seattle", "Los Angeles"]
+    let locations = ["New York", "San Francisco", "Chicago", "Austin", "Seattle", "Los Angeles","Dublin","Dundalk"]
     let seniorities = ["Junior", "Mid", "Senior", "Lead", "Intern"]
     
     var body: some View {
@@ -130,6 +130,7 @@ struct FilterModalView: View {
                         options: seniorities,
                         selectedOptions: $selectedSeniorities
                     )
+                   
                     
                     Spacer()
                 }
@@ -137,24 +138,8 @@ struct FilterModalView: View {
             }
             .navigationTitle("Filters")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Remove") {
-                       
-                        
-                        isPresented = false
-                     
-                    }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Apply") {
-                        // Apply filters here
-                        isPresented = false
-                     
-                    }
-                    .fontWeight(.bold)
-                }
-            }
+            
+            
         }
     }
 }
@@ -203,6 +188,7 @@ struct FilterSectionView: View {
                             }
                         }
                     }
+                    
                 }
                 .padding(.top, 5)
             }

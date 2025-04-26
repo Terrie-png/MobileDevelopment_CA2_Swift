@@ -103,6 +103,19 @@ struct JobApplicationDetailView: View {
                                     .foregroundColor(.white)
                                     .cornerRadius(10)
                             }
+                            NavigationLink {
+                                ChatDetailView(
+                                    isVisible: $isVisible, employeeId: jobApplication.id
+                                )
+                            } label: {
+                                Text("Chat")
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color.green)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(10)
+                            }
+
                         }
                         .padding(.top)
                     }
@@ -150,9 +163,4 @@ struct JobApplicationDetailView: View {
     }
 }
 
-#Preview {
-    @Previewable @State var isVisible = false
-    NavigationView {
-        AppliedJobsView(isVisible: $isVisible)
-    }
-}
+

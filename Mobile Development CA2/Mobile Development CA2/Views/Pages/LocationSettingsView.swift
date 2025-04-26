@@ -1,35 +1,6 @@
 import SwiftUI
 import MapKit
-import CoreLocation
-
-class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
-    private let manager = CLLocationManager()
-    @Published var currentLocation: CLLocationCoordinate2D?
-    @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
-    
-    override init() {
-        super.init()
-        manager.delegate = self
-        manager.desiredAccuracy = kCLLocationAccuracyBest
-    }
-    
-    func requestCurrentLocation() {
-        manager.requestWhenInUseAuthorization()
-        manager.requestLocation() // Request single location update
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        currentLocation = locations.first?.coordinate
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("Location error: \(error.localizedDescription)")
-    }
-    
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        authorizationStatus = manager.authorizationStatus
-    }
-}
+import CoreLocationUI
 
 struct MapLocationPicker: View {
     @State private var position: MapCameraPosition = .automatic
@@ -39,203 +10,185 @@ struct MapLocationPicker: View {
     @State private var mapSelection: MKMapItem?
     @State private var lookAroundScene: MKLookAroundScene?
     @State private var isConfirming = false
-    @State private var showingLocationAlert = false
     @Binding var selectedLocationName: String
-    
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var model
     @State private var visibleRegion: MKCoordinateRegion?
     
+    // Location manager for getting current location
     @StateObject private var locationManager = LocationManager()
+    
     var controller: AuthController = AuthController.shared
     
     var body: some View {
-        ZStack(alignment: .bottom) {
-            // Main Map View
-            Map(position: $position, selection: $mapSelection) {
-                if let selectedLocation {
-                    Marker("Selected Location", coordinate: selectedLocation)
-                        .tint(.blue)
+        
+        GeometryReader { geometry in
+            ZStack(alignment: .bottom) {
+                // Main Map View
+                Map(position: $position, selection: $mapSelection) {
+                    if let selectedLocation {
+                        Marker("Selected Location", coordinate: selectedLocation)
+                            .tint(.blue)
+                    }
+                    
+                    UserAnnotation()
+                }
+                .mapControls {
+                    MapCompass()
+                    MapScaleView()
+                }
+                .mapStyle(.standard)
+                .onMapCameraChange { context in
+                    visibleRegion = context.region
+                }
+                .onTapGesture { screenCoord in
+                    handleMapTap(at: screenCoord, mapSize: geometry.size)
+                }
+                .onChange(of: mapSelection) {
+                    if let mapSelection {
+                        selectedLocation = mapSelection.placemark.coordinate
+                        Task {
+                            await fetchLookAroundScene()
+                        }
+                    }
                 }
                 
-                // Show current location if available
-                if let currentLocation = locationManager.currentLocation {
-                    Annotation("My Location", coordinate: currentLocation) {
-                        ZStack {
-                            Circle()
-                                .fill(.blue)
-                                .frame(width: 24, height: 24)
-                            Circle()
-                                .fill(.white)
-                                .frame(width: 8, height: 8)
-                        }
-                    }
-                }
-            }
-            .mapControls {
-                MapCompass()
-                MapScaleView()
-            }
-            .mapStyle(.standard)
-            .onChange(of: mapSelection) {
-                if let mapSelection {
-                    selectedLocation = mapSelection.placemark.coordinate
-                    Task {
-                        await fetchLookAroundScene()
-                    }
-                }
-            }
-            
-            // Search Bar
-            VStack {
-                HStack {
-                    Image(systemName: "magnifyingglass")
-                        .foregroundColor(.gray)
-                    
-                    TextField("Search location", text: $searchText)
-                        .textFieldStyle(.plain)
-                        .autocorrectionDisabled()
-                        .onSubmit {
-                            Task {
-                                await searchLocations()
-                                showSearchResults = true
+                // Search Bar
+                VStack {
+                    HStack{
+                        HStack {
+                            Image(systemName: "magnifyingglass")
+                                .foregroundColor(.gray)
+                            
+                            TextField("Search location", text: $searchText)
+                                .textFieldStyle(.plain)
+                                .autocorrectionDisabled()
+                                .onSubmit {
+                                    Task {
+                                        await searchLocations()
+                                        showSearchResults = true
+                                    }
+                                }
+                            
+                            if !searchText.isEmpty {
+                                Button {
+                                    searchText = ""
+                                    showSearchResults = false
+                                } label: {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .foregroundColor(.gray)
+                                }
                             }
+                            
                         }
-                    
-                    if !searchText.isEmpty {
+                        .padding(12)
+                        .background(colorScheme == .dark ? Color(.systemGray5) : Color(.systemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .shadow(radius: 5)
+                        .padding()
                         Button {
-                            searchText = ""
-                            showSearchResults = false
+                            dismiss()
                         } label: {
                             Image(systemName: "xmark.circle.fill")
+                                .font(.title)
                                 .foregroundColor(.gray)
+                                .padding()
                         }
                     }
                     
-                    // Current Location Button
-                    Button {
-                        handleCurrentLocationTap()
-                    } label: {
-                        Image(systemName: "location.fill")
-                            .foregroundColor(.blue)
+                    
+                    Spacer()
+                    
+                    // Location Preview Card or Selection Actions
+                    if let selectedLocation {
+                        if let lookAroundScene {
+                            LocationPreviewCard(scene: lookAroundScene) {
+                                isConfirming = true
+                            }
+                            .transition(.move(edge: .bottom))
+                        } else {
+                            // Show a simple confirmation card when no look around scene is available
+                            SimpleLocationConfirmCard(locationName: selectedLocationName) {
+                                isConfirming = true
+                            }
+                            .transition(.move(edge: .bottom))
+                        }
                     }
                 }
-                .padding(12)
-                .background(colorScheme == .dark ? Color(.systemGray5) : Color(.systemBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .shadow(radius: 5)
-                .padding()
                 
-                Spacer()
+                // Search Results
+                if showSearchResults {
+                    SearchResultsView(
+                        searchText: $searchText,
+                        mapSelection: $mapSelection,
+                        position: $position,
+                        showSearchResults: $showSearchResults,
+                        selectedLocationName: $selectedLocationName
+                    )
+                    .background(colorScheme == .dark ? Color(.systemGray6) : Color(.systemBackground))
+                }
                 
-                // Location Preview Card
-                if let selectedLocation, let lookAroundScene {
-                    LocationPreviewCard(scene: lookAroundScene) {
-                        isConfirming = true
+                // Current Location Button
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        LocationButton(.currentLocation) {
+                            if let userLocation = locationManager.userLocation {
+                                selectedLocation = userLocation
+                                position = .camera(MapCamera(centerCoordinate: userLocation, distance: 1000))
+                                lookupLocationName(for: userLocation)
+                            }
+                        }
+                        .labelStyle(.iconOnly)
+                        .symbolVariant(.fill)
+                        .tint(.blue)
+                        .clipShape(Circle())
+                        .padding()
                     }
-                    .transition(.move(edge: .bottom))
                 }
             }
             
-            // Search Results
-            if showSearchResults {
-                SearchResultsView(
-                    searchText: $searchText,
-                    mapSelection: $mapSelection,
-                    position: $position,
-                    showSearchResults: $showSearchResults,
-                    selectedLocationName: $selectedLocationName
-                )
-                .background(colorScheme == .dark ? Color(.systemGray6) : Color(.systemBackground))
+            .onAppear {
+                locationManager.requestLocation()
             }
-        }
-        .overlay(alignment: .topTrailing) {
-            Button {
-                dismiss()
-            } label: {
-                Image(systemName: "xmark.circle.fill")
-                    .font(.title2)
-                    .foregroundColor(.gray)
-                    .padding()
+            .confirmationDialog("Confirm Location", isPresented: $isConfirming) {
+                Button("Confirm") {
+                    guard let userModel: UserModel = controller.getUserModel(modelContext: model) else {
+                        print("Getting usermodel going error")
+                        return
+                    }
+                    if let selectedLocation {
+                        userModel.geoLatitude = selectedLocation.latitude
+                        userModel.geoLongitude = selectedLocation.longitude
+                    }
+                    
+                    userModel.location = selectedLocationName
+                    
+                    do {
+                        try model.save()
+                        dismiss()
+                    } catch {
+                        print("Unable to save model")
+                        return
+                    }
+                }
+                Button("Cancel", role: .cancel) {}
             }
-        }
-        .confirmationDialog("Confirm Location", isPresented: $isConfirming) {
-            Button("Confirm") {
-                confirmLocation()
-            }
-            Button("Cancel", role: .cancel) {}
-        }
-        .alert("Location Access Required",
-               isPresented: $showingLocationAlert) {
-            Button("Settings", role: .none) {
-                openAppSettings()
-            }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("Please enable location access in Settings to use this feature")
-        }
-    }
-    
-    private func handleCurrentLocationTap() {
-        switch locationManager.authorizationStatus {
-        case .notDetermined:
-            locationManager.requestCurrentLocation()
-        case .authorizedWhenInUse, .authorizedAlways:
-            locationManager.requestCurrentLocation()
-            if let currentLocation = locationManager.currentLocation {
-                position = .camera(MapCamera(
-                    centerCoordinate: currentLocation,
-                    distance: 1000,
-                    heading: 0,
-                    pitch: 0
-                ))
-            }
-        case .denied, .restricted:
-            showingLocationAlert = true
-        @unknown default:
-            break
-        }
-    }
-    
-    private func confirmLocation() {
-        guard let userModel: UserModel = controller.getUserModel(modelContext: model) else {
-            print("Getting usermodel going error")
-            return
-        }
-        
-        if let selectedLocation {
-            userModel.geoLatitude = selectedLocation.latitude
-            userModel.geoLongitude = selectedLocation.longitude
-        }
-        
-        if let mapSelection {
-            selectedLocationName = mapSelection.name ?? "Selected Location"
-            userModel.location = selectedLocationName
-        }
-        
-        do {
-            try model.save()
-            dismiss()
-        } catch {
-            print("Unable to save model")
-        }
-    }
-    
-    private func openAppSettings() {
-        if let url = URL(string: UIApplication.openSettingsURLString) {
-            UIApplication.shared.open(url)
         }
     }
     
     private func searchLocations() async {
         let request = MKLocalSearch.Request()
+        
         request.naturalLanguageQuery = searchText
-        request.resultTypes = .address
+        request.resultTypes = [.pointOfInterest, .address]
         
         do {
             let search = MKLocalSearch(request: request)
             let response = try await search.start()
+            
             SearchResultsView.searchResults = response.mapItems
         } catch {
             print("Search error: \(error.localizedDescription)")
@@ -308,31 +261,31 @@ struct MapLocationPicker: View {
 }
 
 // Location Manager Class for getting current device location
-//class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
-//    private let locationManager = CLLocationManager()
-//    @Published var userLocation: CLLocationCoordinate2D?
-//    
-//    override init() {
-//        super.init()
-//        locationManager.delegate = self
-//        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-//    }
-//    
-//    func requestLocation() {
-//        locationManager.requestWhenInUseAuthorization()
-//        locationManager.requestLocation()
-//    }
-//    
-//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-//        if let location = locations.first {
-//            userLocation = location.coordinate
-//        }
-//    }
-//    
-//    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-//        print("Location error: \(error.localizedDescription)")
-//    }
-//}
+class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+    private let locationManager = CLLocationManager()
+    @Published var userLocation: CLLocationCoordinate2D?
+    
+    override init() {
+        super.init()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+    }
+    
+    func requestLocation() {
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.requestLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.first {
+            userLocation = location.coordinate
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Location error: \(error.localizedDescription)")
+    }
+}
 
 // Simple confirmation card for when LookAround isn't available
 struct SimpleLocationConfirmCard: View {
@@ -402,8 +355,6 @@ struct LocationPreviewCard: View {
         .padding()
     }
 }
-
-// Rest of your code (SearchResultsView, LocationPreviewCard, LocationSettingsView) remains the same...
 
 struct SearchResultsView: View {
     @Binding var searchText: String

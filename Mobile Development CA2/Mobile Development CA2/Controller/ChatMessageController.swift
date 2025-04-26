@@ -72,7 +72,9 @@ class ChatMessageController {
                 id: UUID(),
                 user: userId,
                 employee: employeeId,
-                messaage: messageText
+                messaage: messageText,
+                timestamp: Date(),
+                chatDirection: true
             )
             context.insert(message)
             try context.save()
@@ -89,7 +91,9 @@ class ChatMessageController {
                 id: UUID(),
                 user: userId,
                 employee: employeeId,
-                messaage: messageText
+                messaage: messageText,
+                timestamp: Date(),
+                chatDirection: false
             )
             context.insert(message)
             try context.save()

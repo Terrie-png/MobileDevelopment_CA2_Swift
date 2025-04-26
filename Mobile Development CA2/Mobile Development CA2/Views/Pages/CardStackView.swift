@@ -1,14 +1,20 @@
 import SwiftUI
 import SwiftData
-
+extension Double {
+    var degreesToRadians: Double { return self * .pi / 180 }
+    var radiansToDegrees: Double { return self * 180 / .pi }
+}
 struct CardStackView: View {
     @Environment(\.modelContext) var modelContext
     var controller: EmployeeController = EmployeeController.shared
     var interestedController: InterestedEmployeeController = InterestedEmployeeController.shared
     var authController: AuthController = AuthController.shared
+    var userController: UserController = UserController.shared
     @State private var employees: [Employee] = []
     @State private var isLoading = true
-    
+   
+    @State private var userLatittude :Double = 0
+    @State private var userLongitutde :Double = 0
     // Filter bindings
     @Binding var selectedJobTypes: Set<String>
     @Binding var selectedLocations: Set<String>
@@ -19,15 +25,8 @@ struct CardStackView: View {
     private var filteredEmployees: [Employee] {
         guard !employees.isEmpty else { return [] }
         
-        // If no filters are selected, return all employees
-        if selectedJobTypes.isEmpty &&
-            selectedLocations.isEmpty &&
-            selectedSeniorities.isEmpty &&
-            selectedJobTitles.isEmpty {
-            return employees
-        }
-        
-        return employees.filter { employee in
+        // First apply all filters
+        var filtered = employees.filter { employee in
             // Job Type filter
             if !selectedJobTypes.isEmpty {
                 if !selectedJobTypes.contains(employee.jobType) {
@@ -59,7 +58,49 @@ struct CardStackView: View {
             
             return true
         }
+        
+        // If no filters are selected, use all employees
+        if selectedJobTypes.isEmpty &&
+            selectedLocations.isEmpty &&
+            selectedSeniorities.isEmpty &&
+            selectedJobTitles.isEmpty {
+            filtered = employees
+        }
+        
+        // Sort by distance if user location is available
+        if userLatittude != 0 && userLongitutde != 0 {
+            filtered.sort { emp1, emp2 in
+                let distance1 = calculateDistance(from: (userLatittude, userLongitutde),
+                                               to: (emp1.geoLatitude, emp1.geoLongitude))
+                let distance2 = calculateDistance(from: (userLatittude, userLongitutde),
+                                               to: (emp2.geoLatitude, emp2.geoLongitude))
+                return distance1 < distance2
+            }
+        }
+        
+        return filtered
+    
+        
     }
+    private func calculateDistance(from: (Double, Double), to: (Double, Double)) -> Double {
+        let earthRadius = 6371000.0 // meters
+        
+        let lat1 = from.0.degreesToRadians
+        let lon1 = from.1.degreesToRadians
+        let lat2 = to.0.degreesToRadians
+        let lon2 = to.1.degreesToRadians
+        
+        let dLat = lat2 - lat1
+        let dLon = lon2 - lon1
+        
+        let a = sin(dLat/2) * sin(dLat/2) +
+                cos(lat1) * cos(lat2) *
+                sin(dLon/2) * sin(dLon/2)
+        let c = 2 * atan2(sqrt(a), sqrt(1-a))
+        
+        return earthRadius * c
+    }
+    
     
     var body: some View {
         VStack {
@@ -116,6 +157,10 @@ struct CardStackView: View {
                     return
                 }
             let interested = interestedController.getAllInterestedEmployees(context: modelContext, ownerId: ownerId)
+            let userLocation = authController.getUserModel(modelContext: modelContext)
+        userLatittude = userLocation?.geoLatitude ?? 0
+        userLongitutde = userLocation?.geoLongitude ?? 0
+        
             let interestedIDs = Set(interested?.compactMap { $0.id } ?? [])
 
             employees = fetched.filter { employee in
@@ -128,21 +173,4 @@ struct CardStackView: View {
    
     
 
-}
-
-// Preview with sample bindings
-struct CardStackView_Previews: PreviewProvider {
-    @State static var jobTypes: Set<String> = ["Full-time"]
-    @State static var locations: Set<String> = ["New York"]
-    @State static var seniorities: Set<String> = []
-    @State static var jobTitles: Set<String> = []
-    
-    static var previews: some View {
-        CardStackView(
-            selectedJobTypes: $jobTypes,
-            selectedLocations: $locations,
-            selectedSeniorities: $seniorities,
-            selectedJobTitles: $jobTitles
-        )
-    }
 }

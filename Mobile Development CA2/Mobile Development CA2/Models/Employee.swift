@@ -13,8 +13,10 @@ class Employee {
     var jobTitle: String
     var seniority: String
     var salary: String
+    var geoLatitude: Double
+    var geoLongitude: Double
 
-    init(profileImage: String, name: String, rating: String, location: String, experience: String, jobType: String, jobTitle: String, seniority: String, salary: String) {
+    init(profileImage: String, name: String, rating: String, location: String, experience: String, jobType: String, jobTitle: String, seniority: String, salary: String    ,geoLatitude:  Double,geoLongitude: Double) {
         self.id = UUID()
         self.profileImage = profileImage
         self.name = name
@@ -25,5 +27,7 @@ class Employee {
         self.jobTitle = jobTitle
         self.seniority = seniority
         self.salary = salary
+        self.geoLatitude  = geoLatitude
+        self.geoLongitude = geoLongitude
     }
 }
