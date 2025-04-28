@@ -26,6 +26,7 @@ struct CardView: View {
     var isSecondCard: Bool
     @State var showModal = false
     @State var message = ""
+    @Environment(\.notificationService) var notificationService
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             
@@ -99,6 +100,9 @@ struct CardView: View {
                 Text(model.salary)
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(.black)
+                Button("Enable Notifications") {
+                    notificationService.requestNotificationPermission()
+                }
             }
             Spacer()
             
