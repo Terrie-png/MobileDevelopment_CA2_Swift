@@ -1,21 +1,24 @@
-//
-//  Mobile_Development_CA2App.swift
-//  Mobile Development CA2
-//
-//  Created by Student on 13/03/2025.
-//
-
 import SwiftUI
 import SwiftData
-
+import UserNotifications
 
 @main
 struct Mobile_Development_CA2App: App {
-
+    private let notificationService = NotificationService.shared
+    
+    init() {
+        UNUserNotificationCenter.current().delegate = notificationService
+ 
+    }
+    
     var body: some Scene {
         WindowGroup {
-            SplashView().modelContainer(for: [Employee.self,InterestedEmployee.self, UserModel.self,ChatMesage.self])
-                
+            SplashView()
+                .modelContainer(for: [Employee.self, InterestedEmployee.self, UserModel.self, ChatMesage.self])
+                .environment(\.notificationService, notificationService)
         }
     }
 }
+
+// 5. Add this environment key (put it in the same file or your NotificationService file)
+
