@@ -5,6 +5,7 @@ struct ChatDetailView: View {
     @Environment(\.modelContext) var modelContext
      var chatController = ChatMessageController.shared
     var authController = AuthController.shared
+    @Environment(\.notificationService) var notificationService
     
      var emoployeeController = EmployeeController.shared
 
@@ -51,6 +52,8 @@ struct ChatDetailView: View {
                 isVisible = false
                 loadMessages()
                 loadEmployeeDetails()
+                
+                
             }
         }
     }
@@ -190,6 +193,7 @@ struct ChatDetailView: View {
                 messages.append(chatMessage)
                 newMessageText = ""
                 
+                
                 // Mock reply
                 self.sendMockReply(userId: userId)
             } catch {
@@ -200,42 +204,51 @@ struct ChatDetailView: View {
     }
 
     private func sendMockReply(userId: UUID) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            let replies = [
-                "Thanks for your message!",
-                "I'll get back to you soon!",
-                "Appreciate your message!",
-                "Got it, thanks!",
-                "Thank you for reaching out!"
-            ]
-            
-            let replyMessage = ChatMesage(
-                id: UUID(),
-                user: userId,
-                employee: employeeId,
-                messaage: replies.randomElement() ?? "Thank you!",
-                timestamp: Date(),
-                chatDirection: false
-            )
-            
-            do {
-                modelContext.insert(replyMessage)
-                try modelContext.save()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                let replies = [
+                    "Thanks for your message!",
+                    "I'll get back to you soon!",
+                    "Appreciate your message!",
+                    "Got it, thanks!",
+                    "Thank you for reaching out!"
+                ]
                 
-                let chatReply = ChatMessage(
-                    id: replyMessage.id,
-                    text: replyMessage.messaage,
-                    isCurrentUser: false,
-                    timestamp: replyMessage.timestamp
+                let replyText = replies.randomElement() ?? "Thank you!"
+                
+                let replyMessage = ChatMesage(
+                    id: UUID(),
+                    user: userId,
+                    employee: employeeId,
+                    messaage: replyText,
+                    timestamp: Date(),
+                    chatDirection: false
                 )
-                messages.append(chatReply)
-            } catch {
-                errorMessage = "Failed to send reply: \(error.localizedDescription)"
+                
+                do {
+                    modelContext.insert(replyMessage)
+                    try modelContext.save()
+                    
+                    let chatReply = ChatMessage(
+                        id: replyMessage.id,
+                        text: replyMessage.messaage,
+                        isCurrentUser: false,
+                        timestamp: replyMessage.timestamp
+                    )
+                    messages.append(chatReply)
+                    
+                    // Send notification for the reply
+                    notificationService.scheduleLocalNotification(
+                                title: "New Message",
+                                body: replyMessage.messaage,
+                                delay: 1.0 // Shows after 1 second
+                            )
+                } catch {
+                    errorMessage = "Failed to send reply: \(error.localizedDescription)"
+                }
+                
+                isLoading = false
             }
-            
-            isLoading = false
         }
-    }
     
     private func scrollToBottom(proxy: ScrollViewProxy) {
         guard !messages.isEmpty else { return }

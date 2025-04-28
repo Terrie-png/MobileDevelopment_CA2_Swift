@@ -139,4 +139,51 @@ class ChatMessageController {
             return "Error clearing conversation: \(error.localizedDescription)"
         }
     }
+//    func sendUserMessageWithNotification(
+//            userId: UUID,
+//            employeeId: UUID,
+//            messageText: String,
+//            context: ModelContext,
+//            senderName: String
+//        ) -> String? {
+//            if let error = sendUserMessage(
+//                userId: userId,
+//                employeeId: employeeId,
+//                messageText: messageText,
+//                context: context
+//            ) {
+//                return error
+//            }
+//            
+//            NotificationService.shared.notifyNewMessage(
+//                title: "New message from \(senderName)",
+//                body: messageText
+//            )
+//            
+//            return nil
+//        }
+//        
+//        func sendEmployeeMessageWithNotification(
+//            userId: UUID,
+//            employeeId: UUID,
+//            messageText: String,
+//            context: ModelContext,
+//            senderName: String
+//        ) -> String? {
+//            if let error = sendEmployeeMessage(
+//                userId: userId,
+//                employeeId: employeeId,
+//                messageText: messageText,
+//                context: context
+//            ) {
+//                return error
+//            }
+//            
+//            NotificationService.shared.notifyNewMessage(
+//                title: "New message from \(senderName)",
+//                body: messageText
+//            )
+//            
+//            return nil
+//        }
 }

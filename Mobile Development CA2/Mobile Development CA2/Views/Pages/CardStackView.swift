@@ -10,6 +10,8 @@ struct CardStackView: View {
     var interestedController: InterestedEmployeeController = InterestedEmployeeController.shared
     var authController: AuthController = AuthController.shared
     var userController: UserController = UserController.shared
+   
+    
     @State private var employees: [Employee] = []
     @State private var isLoading = true
    
@@ -136,6 +138,7 @@ struct CardStackView: View {
         }
         .onAppear {
             loadEmployees()
+        
         }
       
     }

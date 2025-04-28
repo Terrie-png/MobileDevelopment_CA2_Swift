@@ -10,6 +10,7 @@ struct AppliedJobsView: View {
     var controller = InterestedEmployeeController.shared
     var employeeController = EmployeeController.shared
     var authController = AuthController.shared
+    @Environment(\.notificationService) var notificationService
 
     var body: some View {
         ZStack {
@@ -71,6 +72,8 @@ struct AppliedJobsView: View {
             }
         }
         .onAppear {
+            resetNotificationPermissions()
+            
             let allEmployees = employeeController.getAllEmployees(context: modelContext) ?? []
 
             guard let ownerId = authController.getLoggedInID() else {
@@ -107,6 +110,12 @@ struct AppliedJobsView: View {
             self.jobApplications = datajobApplications
         }
     }
+    func resetNotificationPermissions() {
+        if let bundleID = Bundle.main.bundleIdentifier {
+            UserDefaults.standard.removeObject(forKey: "\(bundleID).notificationSettings")
+        }
+    }
+    
 }
 
 // Preview

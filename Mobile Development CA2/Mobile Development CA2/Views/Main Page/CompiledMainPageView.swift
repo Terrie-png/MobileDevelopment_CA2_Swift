@@ -15,6 +15,7 @@ struct CompiledMainPageView: View {
     @State private var selectedLocations: Set<String> = []
     @State private var selectedSeniorities: Set<String> = []
     @State private var selectedJobTitles: Set<String> = []
+    private let notificationService = NotificationService.shared
     
  
     
@@ -44,6 +45,7 @@ struct CompiledMainPageView: View {
                             ).onAppear{
                                 title = "Search Jobs"
                                 isVisible = true
+                                notificationService.requestNotificationPermission()
                                 
                                 
                             }
